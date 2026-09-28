@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="channel_ringing">Alarma sonando</string>
+    <string name="channel_ringing_quiet">Alarma sonando (pantalla abierta)</string>
     <string name="channel_upcoming">Próxima alarma</string>
     <string name="channel_gave_up">La alarma se rindió</string>
     <string name="notif_stop_phone">Solo se apaga en el teléfono</string>
@@ -172,6 +173,8 @@
     <string name="h_exact_text">Sin esto Android puede sonar minutos tarde.</string>
     <string name="h_battery">Sin límites de batería</string>
     <string name="h_battery_text">El ahorro de batería puede matar la alarma antes de que suene. Elige «No optimizar» o «Sin restricciones».</string>
+    <string name="h_overlay">Mostrar sobre otras apps</string>
+    <string name="h_overlay_text">Mientras usas el teléfono, Android solo deja que la alarma ocupe la pantalla con este permiso. Sin él recibes un pequeño aviso que hay que tocar.</string>
     <string name="h_vendor">Restricciones del fabricante</string>
     <string name="h_vendor_text">Muchos teléfonos añaden sus propios interruptores encima de Android. En la página de la app permite todo lo que encuentres: inicio automático, mostrar en la pantalla de bloqueo, ventanas emergentes en segundo plano, sin restricciones de batería. El teléfono no nos lo dice, así que márcalo tú.</string>
     <string name="h_vendor_guide">Guía para este teléfono</string>

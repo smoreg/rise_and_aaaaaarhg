@@ -2,6 +2,7 @@ package dev.smoreg.raa.ui.qr
 
 import android.Manifest
 import android.content.pm.PackageManager
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -68,7 +69,10 @@ fun QrScreen(onBack: () -> Unit) {
     var naming by remember { mutableStateOf<Naming?>(null) }
     var scanning by remember { mutableStateOf(false) }
     var message by remember { mutableStateOf<Int?>(null) }
-    val cameraAsk = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { if (it) scanning = true }
+    val cameraAsk = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) {
+        if (it) scanning = true else message = R.string.camera_needed
+    }
+    BackHandler(enabled = scanning) { scanning = false }
 
     fun startScan() {
         val granted = ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED

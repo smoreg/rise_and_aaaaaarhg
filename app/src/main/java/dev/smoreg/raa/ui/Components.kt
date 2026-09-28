@@ -1,6 +1,6 @@
 package dev.smoreg.raa.ui
 
-import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.animate
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
@@ -10,9 +10,8 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.draggable
-import androidx.compose.foundation.gestures.rememberDraggableState
+import androidx.compose.foundation.gestures.awaitEachGesture
+import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -40,6 +39,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -50,6 +51,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.clipRect
 import androidx.compose.ui.graphics.lerp
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
@@ -145,12 +147,16 @@ fun Sky(progress: Float, modifier: Modifier = Modifier, horizon: Float = 0.78f) 
 
 private const val RIPPLE_PERIOD_MS = 4000
 
+private const val FLICK_PROJECTION_S = 0.1f
+
 /** Slide the thumb to the end to confirm; a tap does nothing, so half-asleep fingers cannot fire it. */
 @Composable
 fun SlideToConfirm(label: String, onProgress: (Float) -> Unit, onConfirm: () -> Unit, modifier: Modifier = Modifier) {
     val p = LocalPalette.current
     val scope = rememberCoroutineScope()
-    val offset = remember { Animatable(0f) }
+    var offset by remember { mutableFloatStateOf(0f) }
+    val thumb = 64.dp
+    val thumbPx = with(LocalDensity.current) { thumb.toPx() }
     BoxWithConstraints(
         modifier
             .fillMaxWidth()
@@ -159,7 +165,6 @@ fun SlideToConfirm(label: String, onProgress: (Float) -> Unit, onConfirm: () -> 
             .background(p.paper.copy(alpha = 0.72f))
             .border(2.dp, p.dawn, CircleShape),
     ) {
-        val thumb = 64.dp
         val max = with(LocalDensity.current) { (maxWidth - thumb - 8.dp).toPx() }
         Text(
             label,
@@ -170,32 +175,56 @@ fun SlideToConfirm(label: String, onProgress: (Float) -> Unit, onConfirm: () -> 
         )
         Box(
             Modifier
-                .offset { IntOffset(offset.value.roundToInt(), 0) }
+                .offset { IntOffset(offset.roundToInt(), 0) }
                 .padding(4.dp)
                 .size(thumb)
                 .clip(CircleShape)
-                .background(p.dawn)
-                .draggable(
-                    orientation = Orientation.Horizontal,
-                    state = rememberDraggableState { d ->
-                        scope.launch {
-                            offset.snapTo((offset.value + d).coerceIn(0f, max))
-                            onProgress(offset.value / max)
-                        }
-                    },
-                    onDragStopped = {
-                        if (offset.value >= max * 0.92f) {
-                            onConfirm()
-                        } else {
-                            offset.animateTo(0f)
-                            onProgress(0f)
-                        }
-                    },
-                ),
+                .background(p.dawn),
             contentAlignment = Alignment.Center,
         ) {
             Text("→", style = Type.headline, color = p.onDawn)
         }
+        // Gestures are read on the still track, in its coordinates: a listener on the thumb would
+        // move with it. Raw events rather than draggable(): the release position counts too, and
+        // a fast flick delivers only a handful of moves before it.
+        Box(
+            Modifier
+                .matchParentSize()
+                .pointerInput(max) {
+                    awaitEachGesture {
+                        val down = awaitFirstDown()
+                        val onThumb = down.position.x in offset..(offset + thumbPx)
+                        if (!onThumb) return@awaitEachGesture
+                        val startOffset = offset
+                        var lastX = down.position.x
+                        var lastT = down.uptimeMillis
+                        while (true) {
+                            val change = awaitPointerEvent().changes.firstOrNull { it.id == down.id } ?: break
+                            offset = (startOffset + change.position.x - down.position.x).coerceIn(0f, max)
+                            onProgress(offset / max)
+                            change.consume()
+                            if (change.pressed) {
+                                lastX = change.position.x
+                                lastT = change.uptimeMillis
+                                continue
+                            }
+                            val dt = (change.uptimeMillis - lastT).coerceAtLeast(1) / 1000f
+                            val velocity = (change.position.x - lastX) / dt
+                            // Well past halfway and still moving fast enough to reach the end: a deliberate swipe.
+                            val projected = offset + velocity * FLICK_PROJECTION_S
+                            if (offset >= max * 0.9f || (offset >= max * 0.6f && projected >= max)) {
+                                onConfirm()
+                            } else {
+                                scope.launch {
+                                    animate(offset, 0f) { v, _ -> offset = v }
+                                    onProgress(0f)
+                                }
+                            }
+                            break
+                        }
+                    }
+                },
+        )
     }
 }
 

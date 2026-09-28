@@ -37,11 +37,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -55,6 +57,7 @@ import dev.smoreg.raa.ui.Sky
 import dev.smoreg.raa.ui.amPm
 import dev.smoreg.raa.ui.describeDays
 import dev.smoreg.raa.ui.describeIn
+import dev.smoreg.raa.ui.formatClock
 import dev.smoreg.raa.ui.formatTime
 import dev.smoreg.raa.ui.health.Health
 import dev.smoreg.raa.ui.modeName
@@ -99,9 +102,14 @@ fun AlarmListScreen(onEdit: (Long) -> Unit, onQr: () -> Unit, onSettings: () -> 
 
     Column(Modifier.fillMaxSize().background(p.paper)) {
         // In landscape a fixed 300 dp header would leave no room for the list.
-        val header = (LocalConfiguration.current.screenHeightDp * 0.45f).dp.coerceAtMost(380.dp)
+        val windowHeight = with(LocalDensity.current) { LocalWindowInfo.current.containerSize.height.toDp() }
+        val header = (windowHeight * 0.45f).coerceAtMost(380.dp)
+        // Landscape leaves the header about half its portrait height: smaller clock, countdown
+        // beside it instead of below, horizon lower so nothing sits in the water.
+        val compact = header < 240.dp
+        val clockSize = if (compact) 44.sp else Type.clock.fontSize
         Box(Modifier.fillMaxWidth().height(header)) {
-            Sky(sky, Modifier.fillMaxSize(), horizon = 0.76f)
+            Sky(sky, Modifier.fillMaxSize(), horizon = if (compact) 0.9f else 0.76f)
             Column(Modifier.statusBarsPadding().padding(horizontal = 20.dp)) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(stringResource(R.string.app_name), Modifier.weight(1f), style = Type.title, color = text)
@@ -110,22 +118,24 @@ fun AlarmListScreen(onEdit: (Long) -> Unit, onQr: () -> Unit, onSettings: () -> 
                         Icon(Icons.Filled.Settings, stringResource(R.string.settings), tint = text)
                     }
                 }
-                Spacer(Modifier.height(24.dp))
+                Spacer(Modifier.height(if (compact) 4.dp else 24.dp))
                 if (next == null) {
                     Text(stringResource(R.string.no_alarms_title), style = Type.headline, color = text)
-                    Text(stringResource(R.string.no_alarms_text), Modifier.padding(top = 8.dp), color = text.copy(alpha = 0.8f))
+                    if (!compact) Text(stringResource(R.string.no_alarms_text), Modifier.padding(top = 8.dp), color = text.copy(alpha = 0.8f))
                 } else {
                     val (a, at) = next
                     val t = Instant.ofEpochMilli(at).atZone(ZoneId.systemDefault())
+                    val details = listOfNotNull(describeIn(context, at - now), a.label.ifBlank { null }).joinToString(" · ")
                     Row(verticalAlignment = Alignment.Bottom) {
-                        Text(formatTime(context, t.hour, t.minute), style = Type.clock, color = text)
+                        Text(formatTime(context, t.hour, t.minute), style = Type.clock.copy(fontSize = clockSize, lineHeight = clockSize), color = text)
                         amPm(context, t.hour)?.let { Text(it, Modifier.padding(start = 6.dp, bottom = 12.dp), style = Type.title, color = text) }
+                        if (compact) {
+                            Text(details, Modifier.padding(start = 20.dp, bottom = 8.dp), style = MaterialTheme.typography.titleMedium, color = text.copy(alpha = 0.85f))
+                        }
                     }
-                    Text(
-                        listOfNotNull(describeIn(context, at - now), a.label.ifBlank { null }).joinToString(" · "),
-                        style = MaterialTheme.typography.titleMedium,
-                        color = text.copy(alpha = 0.85f),
-                    )
+                    if (!compact) {
+                        Text(details, style = MaterialTheme.typography.titleMedium, color = text.copy(alpha = 0.85f))
+                    }
                 }
             }
         }
@@ -201,7 +211,7 @@ private fun AlarmRow(a: Alarm, now: Long, onClick: () -> Unit, onToggle: (Boolea
             if (a.enabled && a.snoozeUntil > now) {
                 val t = Instant.ofEpochMilli(a.snoozeUntil).atZone(ZoneId.systemDefault())
                 Text(
-                    stringResource(R.string.snoozed_until, formatTime(context, t.hour, t.minute)),
+                    stringResource(R.string.snoozed_until, formatClock(context, t.hour, t.minute)),
                     style = MaterialTheme.typography.bodySmall,
                     color = p.dawn,
                 )

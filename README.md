@@ -15,6 +15,9 @@ adb install -r app/build/outputs/apk/debug/app-debug.apk
 `python3 tools/gen_sounds.py` regenerates the synthesised sounds (needs ffmpeg with libopus),
 `python3 tools/gen_store_art.py` the Play Store icon and feature graphic.
 
+Testing: `docs/test-plan.md` is the manual/emulator test plan, `tools/emu/` the adb helpers it
+uses, `docs/test-report-2026-09-28.md` the latest run.
+
 Release: `RAA_STORE_FILE=/path/to/upload.jks tools/release.sh` builds the signed App Bundle. Store listing texts live in
 `fastlane/metadata/android/`, the Play Console answers in [docs/play-console.md](docs/play-console.md).
 

@@ -37,6 +37,8 @@ data class RingSession(
     val engaged: Boolean = false,
     val lostCode: Boolean = false,
     val cameraActive: Boolean = false,
+    /** The ringing screen is in front; the notification then must not pop up over it. */
+    val screenVisible: Boolean = false,
     val test: Boolean = false,
 ) {
     fun mutedLeftMs() = (mutedUntil - elapsed()).coerceAtLeast(0)
@@ -66,13 +68,20 @@ object Ringer {
     private fun update(f: (RingSession) -> RingSession) = state.update { it?.let(f) }
 
     /** Sunrise or an abandoned early-dismiss screen both turn into a real ring when its time comes. */
-    fun startRinging() = update { if (it.phase != Phase.RING) it.copy(phase = Phase.RING, ringingSince = elapsed()) else it }
+    fun startRinging() {
+        val before = state.value ?: return
+        update { if (it.phase != Phase.RING) it.copy(phase = Phase.RING, ringingSince = elapsed()) else it }
+        if (before.phase != Phase.RING && !before.test) RaaApp.container.scope.launch { RaaApp.container.settings.markRang() }
+    }
 
     fun goQuiet() {
         update { if (it.muted()) it else it.copy(mutedUntil = elapsed() + it.nextQuietMinutes * 60_000L, quietCount = it.quietCount + 1) }
         // Remembered across a restart, so killing the app does not reset the windows to full length.
         val s = state.value ?: return
-        if (!s.test) RaaApp.container.scope.launch { RaaApp.container.settings.saveQuietCount(s.quietCount) }
+        if (!s.test) {
+            val untilWall = System.currentTimeMillis() + s.mutedLeftMs()
+            RaaApp.container.scope.launch { RaaApp.container.settings.saveQuiet(s.quietCount, untilWall) }
+        }
     }
 
     fun setEngaged(on: Boolean) = update { if (it.engaged == on) it else it.copy(engaged = on) }
@@ -81,8 +90,13 @@ object Ringer {
 
     fun setCamera(active: Boolean) = update { it.copy(cameraActive = active) }
 
-    /** Leaving the early-dismiss screen without finishing the task keeps the alarm as it was. */
-    fun cancelEarly() = state.update { if (it?.phase == Phase.EARLY) null else it }
+    fun setScreenVisible(visible: Boolean) = update { if (it.screenVisible == visible) it else it.copy(screenVisible = visible) }
+
+    /** Leaving the early-dismiss screen without finishing the task keeps the alarm as it was, notice included. */
+    fun cancelEarly() {
+        val s = state.getAndUpdate { if (it?.phase == Phase.EARLY) null else it } ?: return
+        if (s.phase == Phase.EARLY) Notifications.upcoming(RaaApp.container.context, s.alarm, s.ringAt)
+    }
 
     fun dropIfNotReal() = state.update { if (it != null && (it.test || it.phase == Phase.EARLY)) null else it }
 
@@ -106,7 +120,9 @@ object Ringer {
         if (s.test) return
         c.settings.saveRingRecord(null)
         val fresh = c.db.alarms().get(s.alarm.id) ?: return
-        val handled = maxOf(fresh.handledUntil, s.ringAt)
+        // If the clock went back past the ring time meanwhile, the occurrence is only handled up to
+        // "now": marking a future instant would silently skip the days in between.
+        val handled = maxOf(fresh.handledUntil, minOf(s.ringAt, System.currentTimeMillis() + 60_000L))
         val updated = if (outcome == Outcome.SNOOZED) {
             fresh.copy(
                 snoozeUntil = System.currentTimeMillis() + fresh.snoozeMinutes * 60_000L,

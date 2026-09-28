@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="channel_ringing">Звонящий будильник</string>
+    <string name="channel_ringing_quiet">Звонящий будильник (экран открыт)</string>
     <string name="channel_upcoming">Скорый будильник</string>
     <string name="channel_gave_up">Будильник сдался</string>
     <string name="notif_stop_phone">Выключается только на телефоне</string>
@@ -178,6 +179,8 @@
     <string name="h_exact_text">Без этого Android может прозвонить на несколько минут позже.</string>
     <string name="h_battery">Без ограничений батареи</string>
     <string name="h_battery_text">Экономия батареи может убить будильник до звонка. Выбери «Не оптимизировать» или «Без ограничений».</string>
+    <string name="h_overlay">Поверх других приложений</string>
+    <string name="h_overlay_text">Пока ты пользуешься телефоном, Android даёт будильнику занять экран только с этим разрешением. Без него придёт лишь маленькая плашка, по которой нужно нажать.</string>
     <string name="h_vendor">Ограничения производителя</string>
     <string name="h_vendor_text">Многие телефоны добавляют поверх Android свои переключатели. На странице приложения разреши всё, что найдёшь: автозапуск, показ на экране блокировки, всплывающие окна в фоне, работу без ограничений батареи. Проверить это телефон нам не даёт, поэтому отметь сам.</string>
     <string name="h_vendor_guide">Инструкция для этого телефона</string>

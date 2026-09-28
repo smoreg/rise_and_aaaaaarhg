@@ -1,10 +1,13 @@
 package dev.smoreg.raa.alarm
 
+import android.app.KeyguardManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ServiceInfo
+import android.media.AudioManager
 import android.os.Build
 import android.os.PowerManager
+import android.provider.Settings
 import android.util.Log
 import androidx.core.app.ServiceCompat
 import androidx.core.content.ContextCompat
@@ -33,6 +36,7 @@ class RingingService : LifecycleService() {
     private lateinit var wakeLock: PowerManager.WakeLock
     private var loop: Job? = null
     private var watchdogArmedAt = 0L
+    private var notifiedScreenVisible = false
 
     override fun onCreate() {
         super.onCreate()
@@ -61,6 +65,14 @@ class RingingService : LifecycleService() {
                 stopSelf()
                 return@launch
             }
+            // When the screen is about to be shown by us (test ring, or overlay permission on an
+            // unlocked phone), the first notification already goes out quietly; otherwise it carries
+            // the full-screen intent that brings the screen up.
+            val willShow = intent?.action == ACTION_SHOW || canOpenScreen()
+            if (willShow) Ringer.setScreenVisible(true)
+            if (intent?.action != ACTION_START && !willShow) {
+                ServiceCompat.stopForeground(this@RingingService, ServiceCompat.STOP_FOREGROUND_REMOVE)
+            }
             goForeground()
             openScreen()
             if (loop == null) loop = lifecycleScope.launch { run() }
@@ -83,6 +95,7 @@ class RingingService : LifecycleService() {
         }
         val alarm = c.db.alarms().get(id) ?: return
         if (!alarm.enabled) return
+        Notifications.cancelUpcoming(this, id)
         val now = System.currentTimeMillis()
         val started = Ringer.begin(
             RingSession(
@@ -92,7 +105,9 @@ class RingingService : LifecycleService() {
                 sunriseStart = if (sunrise) now else ringAt,
             ),
         )
-        if (started) c.settings.saveRingRecord(RingRecord(id, ringAt, now))
+        val userVolume = getSystemService(AudioManager::class.java).getStreamVolume(AudioManager.STREAM_ALARM)
+        sound.rememberUserVolume(userVolume)
+        if (started) c.settings.saveRingRecord(RingRecord(id, ringAt, now, rang = !sunrise, userVolume = userVolume))
     }
 
     private suspend fun onResume() {
@@ -102,11 +117,15 @@ class RingingService : LifecycleService() {
         val alarm = c.db.alarms().get(record.alarmId)
         val autoStop = c.settings.current().autoStopMinutes * 60_000L
         val now = System.currentTimeMillis()
-        if (alarm == null || (autoStop > 0 && now - record.startedAt > autoStop)) {
+        if (alarm == null) {
             c.settings.saveRingRecord(null)
             return
         }
-        val phase = if (now < record.ringAt) Phase.SUNRISE else Phase.RING
+        sound.rememberUserVolume(record.userVolume)
+        val phase = if (record.rang || now >= record.ringAt) Phase.RING else Phase.SUNRISE
+        val ringingFor = (now - maxOf(record.ringAt, record.startedAt)).coerceAtLeast(0)
+        // What is left of a quiet walk carries over, never more than one window's worth.
+        val quietLeft = (record.quietUntil - now).coerceIn(0, alarm.quietMinutes * 60_000L)
         Ringer.begin(
             RingSession(
                 alarm = alarm,
@@ -115,8 +134,13 @@ class RingingService : LifecycleService() {
                 sunriseStart = record.startedAt,
                 startedAt = record.startedAt,
                 quietCount = record.quietCount,
+                mutedUntil = if (quietLeft > 0) elapsed() + quietLeft else 0,
+                ringingSince = if (phase == Phase.RING) elapsed() - ringingFor else 0,
             ),
         )
+        // Past the auto-stop limit the alarm gives up properly: the occurrence is marked handled
+        // and the next one scheduled, so a clock jump plus a reboot is not a way out.
+        if (autoStop > 0 && now - record.ringAt > autoStop) Ringer.finish(Outcome.GAVE_UP)
     }
 
     private suspend fun run() {
@@ -144,6 +168,10 @@ class RingingService : LifecycleService() {
                 sound.tick()
             } else {
                 sound.pause()
+            }
+            if (s.screenVisible != notifiedScreenVisible) {
+                notifiedScreenVisible = s.screenVisible
+                Notifications.update(this, Notifications.RINGING_ID, Notifications.ringing(this, s, s.screenVisible))
             }
             buzzer.set(loud && s.alarm.vibrate)
             torch.set(torchLevel(s, now, loud))
@@ -184,20 +212,34 @@ class RingingService : LifecycleService() {
         } else {
             0
         }
+        val s = Ringer.session.value
+        notifiedScreenVisible = s?.screenVisible == true
         // systemExempted is granted with the exact-alarm permission. Without it there is no legal way to ring.
         runCatching {
-            ServiceCompat.startForeground(this, Notifications.RINGING_ID, Notifications.ringing(this, Ringer.session.value), type)
+            ServiceCompat.startForeground(this, Notifications.RINGING_ID, Notifications.ringing(this, s, notifiedScreenVisible), type)
         }.onFailure {
             Log.e("RingingService", "foreground refused", it)
             Notifications.startFailed(this)
         }
     }
 
-    /** The full-screen intent covers a locked screen; on an unlocked one try to come forward ourselves. */
+    /**
+     * The full-screen intent covers a locked screen. On an unlocked one Android only allows a service
+     * to bring an activity forward when the app may draw over other apps; without that permission the
+     * user gets a heads-up notification instead.
+     */
     private fun openScreen() {
+        if (!canOpenScreen()) return
         runCatching {
             startActivity(Intent(this, RingingActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
         }
+    }
+
+    /** A service may start an activity only with the overlay permission; a locked screen is the full-screen intent's job. */
+    private fun canOpenScreen(): Boolean {
+        val interactive = getSystemService(PowerManager::class.java).isInteractive
+        val locked = getSystemService(KeyguardManager::class.java).isKeyguardLocked
+        return Settings.canDrawOverlays(this) && interactive && !locked
     }
 
     companion object {

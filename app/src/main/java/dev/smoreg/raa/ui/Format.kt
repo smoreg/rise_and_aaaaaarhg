@@ -16,6 +16,10 @@ fun formatTime(context: Context, hour: Int, minute: Int): String {
     return LocalTime.of(hour, minute).format(DateTimeFormatter.ofPattern(pattern))
 }
 
+/** Time with the am/pm suffix where the phone uses one: for running text, not for the big clock. */
+fun formatClock(context: Context, hour: Int, minute: Int): String =
+    listOfNotNull(formatTime(context, hour, minute), amPm(context, hour)).joinToString(" ")
+
 /** "am"/"pm" suffix when the phone uses a 12-hour clock, otherwise null. */
 fun amPm(context: Context, hour: Int): String? =
     if (DateFormat.is24HourFormat(context)) null

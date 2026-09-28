@@ -9,9 +9,14 @@ import dev.smoreg.raa.MainActivity
 import dev.smoreg.raa.data.Alarm
 import dev.smoreg.raa.data.AlarmDao
 import dev.smoreg.raa.data.Settings
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import java.time.ZonedDateTime
 
 enum class Trigger { SUNRISE, RING, UPCOMING, WATCHDOG }
+
+/** The two-hour notice is not time-critical, but an unbounded inexact alarm can be an hour late. */
+private const val NOTICE_WINDOW_MS = 10 * 60_000L
 
 class Scheduler(
     private val context: Context,
@@ -19,10 +24,12 @@ class Scheduler(
     private val settings: Settings,
 ) {
     private val am = context.getSystemService(AlarmManager::class.java)
+    private val lock = Mutex()
 
     suspend fun rescheduleAll() = alarms.all().forEach { schedule(it) }
 
-    suspend fun schedule(alarm: Alarm) {
+    /** Serialized: two overlapping calls for one alarm must not leave a cancelled alarm behind. */
+    suspend fun schedule(alarm: Alarm) = lock.withLock {
         cancel(alarm.id)
         val now = ZonedDateTime.now()
         val ring = NextTrigger.ring(alarm, now) ?: return
@@ -30,13 +37,14 @@ class Scheduler(
 
         setClock(ringMs, AlarmReceiver.pending(context, Trigger.RING, alarm.id, ringMs))
         NextTrigger.sunrise(alarm, ring, now)?.let {
-            setClock(it.toInstant().toEpochMilli(), AlarmReceiver.pending(context, Trigger.SUNRISE, alarm.id, ringMs))
+            setExact(it.toInstant().toEpochMilli(), AlarmReceiver.pending(context, Trigger.SUNRISE, alarm.id, ringMs))
         }
         val notice = ring.minusHours(2)
         if (settings.current().upcomingNotice && alarm.snoozeUntil == 0L && notice.isAfter(now)) {
-            am.set(
+            am.setWindow(
                 AlarmManager.RTC,
                 notice.toInstant().toEpochMilli(),
+                NOTICE_WINDOW_MS,
                 AlarmReceiver.pending(context, Trigger.UPCOMING, alarm.id, ringMs),
             )
         }
@@ -62,6 +70,12 @@ class Scheduler(
     }
 
     fun canExact() = Build.VERSION.SDK_INT < Build.VERSION_CODES.S || am.canScheduleExactAlarms()
+
+    /** Exact and Doze-proof, but not shown as the phone's next alarm: that is the ring's job. */
+    private fun setExact(at: Long, op: PendingIntent) {
+        if (canExact()) am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, at, op)
+        else am.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, at, op)
+    }
 
     private fun setClock(at: Long, op: PendingIntent) {
         if (canExact()) {

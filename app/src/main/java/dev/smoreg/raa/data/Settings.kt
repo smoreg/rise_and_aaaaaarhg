@@ -26,7 +26,18 @@ data class AppSettings(
 )
 
 /** What was ringing when the process died; lets a reboot resume the alarm instead of escaping it. */
-data class RingRecord(val alarmId: Long, val ringAt: Long, val startedAt: Long, val quietCount: Int = 0)
+data class RingRecord(
+    val alarmId: Long,
+    val ringAt: Long,
+    val startedAt: Long,
+    val quietCount: Int = 0,
+    /** The sound had started: after a restart it must ring, whatever the clock says now. */
+    val rang: Boolean = false,
+    /** Wall-clock end of the current quiet walk, 0 when not quiet. */
+    val quietUntil: Long = 0,
+    /** The alarm-stream volume before the ring, to put back afterwards; -1 = unknown. */
+    val userVolume: Int = -1,
+)
 
 class Settings(context: Context) {
     private val store = PreferenceDataStoreFactory.create {
@@ -43,6 +54,9 @@ class Settings(context: Context) {
         val ringAt = longPreferencesKey("ring_at")
         val ringStarted = longPreferencesKey("ring_started")
         val ringQuietCount = intPreferencesKey("ring_quiet_count")
+        val ringRang = booleanPreferencesKey("ring_rang")
+        val ringQuietUntil = longPreferencesKey("ring_quiet_until")
+        val ringUserVolume = intPreferencesKey("ring_user_volume")
     }
 
     val flow: Flow<AppSettings> = store.data.map { it.toSettings() }
@@ -63,21 +77,34 @@ class Settings(context: Context) {
     suspend fun ringRecord(): RingRecord? {
         val p = store.data.first()
         val id = p[K.ringId] ?: return null
-        return RingRecord(id, p[K.ringAt] ?: 0, p[K.ringStarted] ?: 0, p[K.ringQuietCount] ?: 0)
+        return RingRecord(
+            id, p[K.ringAt] ?: 0, p[K.ringStarted] ?: 0, p[K.ringQuietCount] ?: 0, p[K.ringRang] ?: false,
+            p[K.ringQuietUntil] ?: 0, p[K.ringUserVolume] ?: -1,
+        )
     }
 
     suspend fun saveRingRecord(r: RingRecord?) {
         store.edit { p ->
             if (r == null) {
-                p.remove(K.ringId); p.remove(K.ringAt); p.remove(K.ringStarted); p.remove(K.ringQuietCount)
+                p.remove(K.ringId); p.remove(K.ringAt); p.remove(K.ringStarted); p.remove(K.ringQuietCount); p.remove(K.ringRang); p.remove(K.ringQuietUntil); p.remove(K.ringUserVolume)
             } else {
-                p[K.ringId] = r.alarmId; p[K.ringAt] = r.ringAt; p[K.ringStarted] = r.startedAt; p[K.ringQuietCount] = r.quietCount
+                p[K.ringId] = r.alarmId; p[K.ringAt] = r.ringAt; p[K.ringStarted] = r.startedAt; p[K.ringQuietCount] = r.quietCount; p[K.ringRang] = r.rang; p[K.ringQuietUntil] = r.quietUntil
+                p[K.ringUserVolume] = r.userVolume
             }
         }
     }
 
-    suspend fun saveQuietCount(count: Int) {
-        store.edit { if (it.contains(K.ringId)) it[K.ringQuietCount] = count }
+    suspend fun saveQuiet(count: Int, untilWall: Long) {
+        store.edit {
+            if (it.contains(K.ringId)) {
+                it[K.ringQuietCount] = count
+                it[K.ringQuietUntil] = untilWall
+            }
+        }
+    }
+
+    suspend fun markRang() {
+        store.edit { if (it.contains(K.ringId)) it[K.ringRang] = true }
     }
 
     private fun Preferences.toSettings() = AppSettings(

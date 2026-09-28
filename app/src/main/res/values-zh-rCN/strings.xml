@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="channel_ringing">正在响的闹钟</string>
+    <string name="channel_ringing_quiet">正在响的闹钟（界面已打开）</string>
     <string name="channel_upcoming">即将到来的闹钟</string>
     <string name="channel_gave_up">闹钟放弃了</string>
     <string name="notif_stop_phone">只能在手机上关闭</string>
@@ -160,6 +161,8 @@
     <string name="h_exact_text">没有它，Android 可能会晚几分钟才响。</string>
     <string name="h_battery">无电池限制</string>
     <string name="h_battery_text">省电功能可能在闹钟响之前把它杀掉。请选择“不优化”或“无限制”。</string>
+    <string name="h_overlay">显示在其他应用上层</string>
+    <string name="h_overlay_text">当你正在使用手机时，只有获得此权限，Android 才允许闹钟占据屏幕。没有它，你只会收到一个需要点击的小横幅。</string>
     <string name="h_vendor">手机厂商的限制</string>
     <string name="h_vendor_text">很多手机在 Android 之上加了自己的开关。在应用详情页里允许你能找到的一切：自启动、锁屏显示、后台弹出界面、无电池限制。手机不会告诉我们结果，所以请自己标记。</string>
     <string name="h_vendor_guide">这部手机的说明</string>

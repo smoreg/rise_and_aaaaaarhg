@@ -1,6 +1,7 @@
 package dev.smoreg.raa.ui.health
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
@@ -35,6 +36,7 @@ object Health {
         fullScreen(context),
         exact(),
         battery(context),
+        overlay(context),
         s.vendorSettingsDone,
     ).count { !it }
 
@@ -57,7 +59,17 @@ object Health {
             appDetails(context)
         }
 
-    fun batterySettings() = Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS)
+    /**
+     * The direct "allow this app?" dialog; the general list makes the user hunt for the app.
+     * Play allows this for apps whose core function breaks under battery optimisation; an alarm is the textbook case.
+     */
+    @SuppressLint("BatteryLife")
+    fun batterySettings(context: Context) = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS, pkg(context))
+
+    /** Without it Android shows a heads-up instead of the ringing screen while the phone is in use. */
+    fun overlay(context: Context) = Settings.canDrawOverlays(context)
+
+    fun overlaySettings(context: Context) = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, pkg(context))
 
     /** Per-manufacturer instructions, maintained by the community at dontkillmyapp.com. */
     fun vendorGuide(): Intent {

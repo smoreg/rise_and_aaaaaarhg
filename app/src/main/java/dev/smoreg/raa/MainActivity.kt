@@ -1,13 +1,19 @@
 package dev.smoreg.raa
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.runtime.LaunchedEffect
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -16,6 +22,7 @@ import androidx.navigation.navArgument
 import dev.smoreg.raa.alarm.Phase
 import dev.smoreg.raa.alarm.Ringer
 import dev.smoreg.raa.data.AppSettings
+import dev.smoreg.raa.data.ThemeMode
 import dev.smoreg.raa.ui.editor.EditorScreen
 import dev.smoreg.raa.ui.health.HealthScreen
 import dev.smoreg.raa.ui.list.AlarmListScreen
@@ -36,11 +43,32 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         val settingsFlow = RaaApp.container.settings.flow
         setContent {
             val settings by settingsFlow.collectAsStateWithLifecycle(initialValue = null)
             val s = settings ?: return@setContent
+            val dark = when (s.theme) {
+                ThemeMode.DARK -> true
+                ThemeMode.LIGHT -> false
+                ThemeMode.SYSTEM -> isSystemInDarkTheme()
+            }
+            // An alarm that starts while the app itself is open: the service cannot bring the ringing
+            // screen forward without the overlay permission, but a foreground activity can.
+            LaunchedEffect(Unit) {
+                // Only while this activity is in front: from the background the start would just be refused.
+                lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                    Ringer.session.collect { session ->
+                        if (session?.phase == Phase.RING || session?.phase == Phase.SUNRISE) {
+                            startActivity(Intent(this@MainActivity, RingingActivity::class.java))
+                        }
+                    }
+                }
+            }
+            // Status-bar icons follow the app theme, not the phone's: the app is dark by default.
+            LaunchedEffect(dark) {
+                val bars = if (dark) SystemBarStyle.dark(Color.TRANSPARENT) else SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT)
+                enableEdgeToEdge(bars, bars)
+            }
             RaaTheme(s.theme) { App(s) }
         }
     }

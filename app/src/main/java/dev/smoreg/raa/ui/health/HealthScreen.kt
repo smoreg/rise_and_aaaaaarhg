@@ -50,6 +50,7 @@ private data class Statuses(
     val fullScreen: Boolean,
     val exact: Boolean,
     val battery: Boolean,
+    val overlay: Boolean,
     val camera: Boolean,
 )
 
@@ -58,6 +59,7 @@ private fun read(context: Context) = Statuses(
     Health.fullScreen(context),
     Health.exact(),
     Health.battery(context),
+    Health.overlay(context),
     Health.camera(context),
 )
 
@@ -91,7 +93,8 @@ fun HealthScreen(onboarding: Boolean, onDone: () -> Unit) {
             }
             Item(st.fullScreen, R.string.h_fullscreen, R.string.h_fullscreen_text) { open(Health.fullScreenSettings(context)) }
             Item(st.exact, R.string.h_exact, R.string.h_exact_text) { open(Health.exactSettings(context)) }
-            Item(st.battery, R.string.h_battery, R.string.h_battery_text) { open(Health.batterySettings()) }
+            Item(st.battery, R.string.h_battery, R.string.h_battery_text) { open(Health.batterySettings(context)) }
+            Item(st.overlay, R.string.h_overlay, R.string.h_overlay_text) { open(Health.overlaySettings(context)) }
             Item(
                 s.vendorSettingsDone, R.string.h_vendor, R.string.h_vendor_text,
                 extra = {

@@ -65,11 +65,14 @@ import dev.smoreg.raa.mission.hasAccelerometer
 import dev.smoreg.raa.ui.PrimaryButton
 import dev.smoreg.raa.ui.Sky
 import dev.smoreg.raa.ui.SlideToConfirm
+import dev.smoreg.raa.ui.formatClock
 import dev.smoreg.raa.ui.formatTime
 import dev.smoreg.raa.ui.onSky
 import dev.smoreg.raa.ui.theme.LocalPalette
+import dev.smoreg.raa.ui.theme.SkyStops
 import dev.smoreg.raa.ui.theme.Type
-import java.time.LocalTime
+import java.time.Instant
+import java.time.ZoneId
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -112,6 +115,8 @@ fun RingingScreen(s: RingSession) {
     val sky = base + (1f - base) * progress
     val strobe = s.alarm.light == LightMode.STROBE && loud && (now / STROBE_HALF_PERIOD_MS) % 2 == 0L
     val text = if (strobe) Color.White else onSky(sky)
+    // The task lives below the horizon, on dark water, whatever the sky is doing above.
+    val lower = if (strobe) Color.White else SkyStops.last()
 
     ScreenBrightness(
         when {
@@ -128,7 +133,7 @@ fun RingingScreen(s: RingSession) {
         if (strobe) Box(Modifier.fillMaxSize().background(LocalPalette.current.scream))
 
         Column(Modifier.fillMaxSize().safeDrawingPadding().padding(20.dp)) {
-            val t = LocalTime.now()
+            val t = Instant.ofEpochMilli(now).atZone(ZoneId.systemDefault())
             Text(formatTime(context, t.hour, t.minute), style = Type.clock, color = text)
             Text(
                 s.alarm.label.ifBlank { stringResource(headline(s, task)) },
@@ -137,7 +142,7 @@ fun RingingScreen(s: RingSession) {
             )
             if (s.phase == Phase.SUNRISE) {
                 Text(
-                    stringResource(R.string.sunrise_until, formatTime(context, s.alarm.hour, s.alarm.minute)),
+                    stringResource(R.string.sunrise_until, ringAtText(context, s.ringAt)),
                     Modifier.padding(top = 6.dp),
                     color = text.copy(alpha = 0.8f),
                 )
@@ -149,20 +154,20 @@ fun RingingScreen(s: RingSession) {
 
             if (s.phase == Phase.SUNRISE && !awake) {
                 TextButton(onClick = { awake = true }, Modifier.align(Alignment.CenterHorizontally)) {
-                    Text(stringResource(R.string.already_awake), color = text, style = Type.title)
+                    Text(stringResource(R.string.already_awake), color = lower, style = Type.title)
                 }
             } else {
                 when (task) {
                     Task.BUTTON -> SlideToConfirm(stringResource(R.string.slide_to_wake), { progress = it }, ::done)
-                    Task.QR -> QrTask(s, now, text, onDone = ::done)
+                    Task.QR -> QrTask(s, now, lower, onDone = ::done)
                     Task.SHAKE -> ShakeTask(
                         level = if (s.lostCode) LOST_CODE_SHAKE else s.alarm.shakeLevel,
-                        text = text,
+                        text = lower,
                         onProgress = { progress = it },
                         onDead = { sensorDead = true },
                         onDone = ::done,
                     )
-                    Task.TAP -> TapTask(text, onProgress = { progress = it }, onDone = ::done)
+                    Task.TAP -> TapTask(lower, onProgress = { progress = it }, onDone = ::done)
                 }
             }
 
@@ -175,12 +180,17 @@ fun RingingScreen(s: RingSession) {
                             pluralStringResource(R.plurals.minutes, s.alarm.snoozeMinutes, s.alarm.snoozeMinutes),
                             pluralStringResource(R.plurals.snooze_left, left, left),
                         ),
-                        color = text.copy(alpha = 0.85f),
+                        color = lower.copy(alpha = 0.85f),
                     )
                 }
             }
         }
     }
+}
+
+private fun ringAtText(context: android.content.Context, ringAt: Long): String {
+    val t = Instant.ofEpochMilli(ringAt).atZone(ZoneId.systemDefault())
+    return formatClock(context, t.hour, t.minute)
 }
 
 private fun headline(s: RingSession, task: Task) = when {
@@ -290,10 +300,14 @@ private fun ShakeTask(level: ShakeLevel, text: Color, onProgress: (Float) -> Uni
     var shown by remember { mutableFloatStateOf(0f) }
     val samples = remember { longArrayOf(0) }
     val lastShake = remember { longArrayOf(0) }
+    val counting = remember { booleanArrayOf(false) }
     SilentWhileActive(SHAKE_GRACE_MS) { lastShake[0] }
     ShakeListener { accel, dt ->
         samples[0]++
-        if (detector.counts(accel)) lastShake[0] = elapsed()
+        val counts = detector.counts(accel)
+        // A single spike (a bump, sensor jitter) is not shaking; two counting samples in a row are.
+        if (counts && counting[0]) lastShake[0] = elapsed()
+        counting[0] = counts
         detector.feed(accel, dt)
         shown = detector.progress
         onProgress(detector.progress)

@@ -1,6 +1,7 @@
 package dev.smoreg.raa.alarm
 
 import android.Manifest
+import android.app.ActivityOptions
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -15,12 +16,14 @@ import dev.smoreg.raa.MainActivity
 import dev.smoreg.raa.R
 import dev.smoreg.raa.data.Alarm
 import dev.smoreg.raa.data.DismissMode
-import dev.smoreg.raa.ui.formatTime
+import dev.smoreg.raa.ui.formatClock
 import dev.smoreg.raa.ui.ringing.RingingActivity
 
 object Notifications {
     const val RINGING_ID = 1
     private const val CH_RINGING = "ringing"
+    /** Same notification while the ringing screen is already in front: must not pop up over it. */
+    private const val CH_RINGING_QUIET = "ringing_quiet"
     private const val CH_UPCOMING = "upcoming"
     private const val CH_GAVE_UP = "gave_up"
 
@@ -33,33 +36,51 @@ object Notifications {
                         setSound(null, null)
                         enableVibration(false)
                     },
+                NotificationChannel(CH_RINGING_QUIET, context.getString(R.string.channel_ringing_quiet), NotificationManager.IMPORTANCE_LOW)
+                    .apply { setSound(null, null); enableVibration(false) },
                 NotificationChannel(CH_UPCOMING, context.getString(R.string.channel_upcoming), NotificationManager.IMPORTANCE_LOW),
                 NotificationChannel(CH_GAVE_UP, context.getString(R.string.channel_gave_up), NotificationManager.IMPORTANCE_DEFAULT),
             ),
         )
     }
 
-    fun ringing(context: Context, s: RingSession?): android.app.Notification {
-        val open = PendingIntent.getActivity(
-            context, 0,
-            Intent(context, RingingActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
-        )
+    /**
+     * [screenVisible]: the ringing screen is already in front, so no heads-up should cover it.
+     * The notification stays ongoing either way; it is what keeps the service alive.
+     */
+    fun ringing(context: Context, s: RingSession?, screenVisible: Boolean = false): android.app.Notification {
+        val open = openRinging(context)
         val alarm = s?.alarm
         val title = alarm?.label?.takeIf { it.isNotBlank() }
             ?: context.getString(R.string.app_name)
-        return NotificationCompat.Builder(context, CH_RINGING)
+        return NotificationCompat.Builder(context, if (screenVisible) CH_RINGING_QUIET else CH_RINGING)
             .setSmallIcon(R.drawable.ic_notification)
             .setContentTitle(title)
             .setContentText(context.getString(howToStop(alarm?.dismissMode)))
             .setCategory(NotificationCompat.CATEGORY_ALARM)
-            .setPriority(NotificationCompat.PRIORITY_MAX)
+            .setPriority(if (screenVisible) NotificationCompat.PRIORITY_LOW else NotificationCompat.PRIORITY_MAX)
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             .setOngoing(true)
             .setOnlyAlertOnce(true)
+            // Android otherwise holds a foreground service's notification back for 10 s: 10 s of sound with no screen.
+            .setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE)
             .setContentIntent(open)
-            .setFullScreenIntent(open, true)
+            .apply { if (!screenVisible) setFullScreenIntent(open, true) }
             .build()
+    }
+
+    private fun openRinging(context: Context): PendingIntent {
+        val intent = Intent(context, RingingActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        val flags = PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        // From API 34 the creator must say that this intent may start an activity from the background.
+        val options = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            ActivityOptions.makeBasic()
+                .setPendingIntentCreatorBackgroundActivityStartMode(ActivityOptions.MODE_BACKGROUND_ACTIVITY_START_ALLOWED)
+                .toBundle()
+        } else {
+            null
+        }
+        return PendingIntent.getActivity(context, 0, intent, flags, options)
     }
 
     fun upcoming(context: Context, alarm: Alarm, ringAt: Long) {
@@ -70,7 +91,7 @@ object Notifications {
         )
         val n = NotificationCompat.Builder(context, CH_UPCOMING)
             .setSmallIcon(R.drawable.ic_notification)
-            .setContentTitle(context.getString(R.string.upcoming_title, formatTime(context, alarm.hour, alarm.minute)))
+            .setContentTitle(context.getString(R.string.upcoming_title, formatClock(context, alarm.hour, alarm.minute)))
             .setContentText(alarm.label.ifBlank { context.getString(howToStop(alarm.dismissMode)) })
             .setContentIntent(early)
             .addAction(0, context.getString(R.string.upcoming_dismiss_early), early)
@@ -78,6 +99,8 @@ object Notifications {
             .build()
         post(context, upcomingId(alarm.id), n)
     }
+
+    fun update(context: Context, id: Int, n: android.app.Notification) = post(context, id, n)
 
     fun cancelUpcoming(context: Context, alarmId: Long) =
         NotificationManagerCompat.from(context).cancel(upcomingId(alarmId))
@@ -88,7 +111,7 @@ object Notifications {
         )
         val n = NotificationCompat.Builder(context, CH_GAVE_UP)
             .setSmallIcon(R.drawable.ic_notification)
-            .setContentTitle(context.getString(R.string.gave_up_title, formatTime(context, alarm.hour, alarm.minute)))
+            .setContentTitle(context.getString(R.string.gave_up_title, formatClock(context, alarm.hour, alarm.minute)))
             .setContentText(context.getString(R.string.gave_up_text))
             .setContentIntent(open)
             .setAutoCancel(true)

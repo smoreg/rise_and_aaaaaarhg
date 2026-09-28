@@ -42,6 +42,8 @@ Images: `fastlane/metadata/android/en-US/images/` — `icon.png` 512×512, `feat
 | `USE_FULL_SCREEN_INTENT` | Alarm clock: the ringing alarm must take over a locked screen so the user can dismiss it. |
 | `FOREGROUND_SERVICE_SYSTEM_EXEMPTED` | Keeps the user-set alarm playing sound, vibration and light while it rings, until the user dismisses it or the auto-stop fires. Only started by an exact alarm the user scheduled. Video: record an alarm ringing on a locked phone and being dismissed. |
 | `CAMERA` | Scanning the user's own printed QR code to dismiss an alarm; on-device only. |
+| `SYSTEM_ALERT_WINDOW` (optional, asked in Alarm health) | Bring the ringing alarm screen forward while the phone is unlocked and in use; without it Android only shows a heads-up notification. |
+| `REQUEST_IGNORE_BATTERY_OPTIMIZATIONS` (optional) | Alarm clock: battery optimisation can delay or kill the alarm; the app asks the user directly instead of sending them to the settings list. |
 
 ## Before each release
 

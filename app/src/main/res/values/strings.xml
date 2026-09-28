@@ -4,6 +4,7 @@
     <string name="source_url" translatable="false">https://github.com/smoreg/rise_and_aaaaaarhg</string>
 
     <string name="channel_ringing">Ringing alarm</string>
+    <string name="channel_ringing_quiet">Ringing alarm (screen open)</string>
     <string name="channel_upcoming">Upcoming alarm</string>
     <string name="channel_gave_up">Alarm gave up</string>
     <string name="notif_stop_phone">Stops only on the phone</string>
@@ -171,6 +172,8 @@
     <string name="h_exact_text">Without it Android may ring minutes late.</string>
     <string name="h_battery">No battery limits</string>
     <string name="h_battery_text">Battery saving can kill the alarm before it rings. Pick \"Don\'t optimize\" or \"Unrestricted\".</string>
+    <string name="h_overlay">Show over other apps</string>
+    <string name="h_overlay_text">While you are using the phone, Android only lets the alarm take the screen with this permission. Without it you get a small banner to tap.</string>
     <string name="h_vendor">Phone maker\'s restrictions</string>
     <string name="h_vendor_text">Many phones add their own switches on top of Android. On the app page allow everything you find: autostart, show on lock screen, pop-up windows in the background, no battery restrictions. The phone cannot tell us, so mark it yourself.</string>
     <string name="h_vendor_guide">Guide for this phone</string>
