@@ -1,6 +1,11 @@
 package dev.smoreg.raa.ui
 
 import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -32,15 +37,18 @@ import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.clipRect
 import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
@@ -60,7 +68,11 @@ import dev.smoreg.raa.ui.theme.SunHigh
 import dev.smoreg.raa.ui.theme.SunLow
 import dev.smoreg.raa.ui.theme.Type
 import kotlinx.coroutines.launch
+import kotlin.math.PI
+import kotlin.math.abs
 import kotlin.math.roundToInt
+import kotlin.math.sin
+import kotlin.math.sqrt
 
 fun skyColor(p: Float): Color {
     val x = p.coerceIn(0f, 1f) * (SkyStops.size - 1)
@@ -73,25 +85,65 @@ private const val SKY_LIGHT_FROM = 0.72f
 
 fun onSky(p: Float): Color = if (p > SKY_LIGHT_FROM) SkyStops.first() else SkyStops.last()
 
-/** Horizon with a sun behind it: 0 is night with the sun below the line, 1 is morning with it high up. */
+/**
+ * Horizon over water with a sun behind it: 0 is night with the sun below the line, 1 is morning with
+ * it high up. Below the line the sun is reflected as slowly rippling stripes.
+ */
 @Composable
 fun Sky(progress: Float, modifier: Modifier = Modifier, horizon: Float = 0.78f) {
-    Canvas(modifier) {
+    val ripple by rememberInfiniteTransition(label = "ripple").animateFloat(
+        initialValue = 0f,
+        targetValue = (2 * PI).toFloat(),
+        animationSpec = infiniteRepeatable(tween(RIPPLE_PERIOD_MS, easing = LinearEasing)),
+        label = "phase",
+    )
+    // The glow is wider than the sky; without clipping it leaks onto whatever sits below.
+    Canvas(modifier.clipToBounds()) {
         val p = progress.coerceIn(0f, 1f)
         val horizonY = size.height * horizon
-        drawRect(Brush.verticalGradient(listOf(skyColor(p * 0.7f), skyColor((p + 0.18f).coerceAtMost(1f))), endY = horizonY))
-
         val r = size.minDimension * 0.16f
         val eased = 1f - (1f - p) * (1f - p)
         val center = Offset(size.width * 0.5f, lerp(horizonY + r * 1.1f, size.height * 0.2f, eased))
         val sun = lerp(SunLow, SunHigh, p)
-        drawCircle(Brush.radialGradient(listOf(sun.copy(alpha = 0.5f), Color.Transparent), center, r * 3.2f), r * 3.2f, center)
-        drawCircle(sun, r, center)
 
-        drawRect(lerp(GroundNight, GroundMorning, p), Offset(0f, horizonY))
-        drawRect(sun.copy(alpha = 0.35f + 0.4f * p), Offset(0f, horizonY), Size(size.width, 2.dp.toPx()))
+        // Sky and sun end at the horizon; below it only the water and the reflection are drawn.
+        clipRect(bottom = horizonY) {
+            drawRect(Brush.verticalGradient(listOf(skyColor(p * 0.7f), skyColor((p + 0.18f).coerceAtMost(1f))), endY = horizonY))
+            drawCircle(Brush.radialGradient(listOf(sun.copy(alpha = 0.5f), Color.Transparent), center, r * 3.2f), r * 3.2f, center)
+            drawCircle(sun, r, center)
+        }
+
+        val water = size.height - horizonY
+        drawRect(
+            // Fades out at the bottom so the water melts into whatever background is below.
+            Brush.verticalGradient(listOf(lerp(GroundNight, GroundMorning, p), Color.Transparent), startY = horizonY, endY = size.height),
+            Offset(0f, horizonY),
+        )
+
+        // Reflection: the sun mirrored in the horizon, sliced into stripes that thin out and
+        // spread apart with depth, each drifting sideways on its own phase.
+        val mirroredY = 2 * horizonY - center.y
+        val stripe = 2.dp.toPx()
+        var y = horizonY + stripe * 2
+        var i = 0
+        while (y < size.height) {
+            val depth = (y - horizonY) / water
+            val dy = y - mirroredY
+            if (abs(dy) < r) {
+                val half = sqrt(r * r - dy * dy) * (1f - 0.35f * depth)
+                val drift = sin(ripple + i * 0.9f) * r * 0.12f
+                val shimmer = 0.75f + 0.25f * sin(ripple * 2 + i * 1.7f)
+                val alpha = 0.9f * (1f - depth) * (0.6f + 0.4f * p) * shimmer
+                drawRect(sun.copy(alpha = alpha), Offset(center.x - half + drift, y), Size(half * 2, stripe))
+            }
+            y += stripe * (2f + depth * 3f)
+            i++
+        }
+        drawRect(sun.copy(alpha = 0.35f + 0.4f * p), Offset(0f, horizonY), Size(size.width, 1.5.dp.toPx()))
     }
 }
+
+private const val RIPPLE_PERIOD_MS = 4000
 
 /** Slide the thumb to the end to confirm; a tap does nothing, so half-asleep fingers cannot fire it. */
 @Composable

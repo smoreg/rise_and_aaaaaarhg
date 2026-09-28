@@ -37,6 +37,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
@@ -97,8 +98,10 @@ fun AlarmListScreen(onEdit: (Long) -> Unit, onQr: () -> Unit, onSettings: () -> 
     val text = onSky(sky)
 
     Column(Modifier.fillMaxSize().background(p.paper)) {
-        Box(Modifier.fillMaxWidth().height(300.dp)) {
-            Sky(sky, Modifier.fillMaxSize(), horizon = 0.86f)
+        // In landscape a fixed 300 dp header would leave no room for the list.
+        val header = (LocalConfiguration.current.screenHeightDp * 0.45f).dp.coerceAtMost(380.dp)
+        Box(Modifier.fillMaxWidth().height(header)) {
+            Sky(sky, Modifier.fillMaxSize(), horizon = 0.76f)
             Column(Modifier.statusBarsPadding().padding(horizontal = 20.dp)) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(stringResource(R.string.app_name), Modifier.weight(1f), style = Type.title, color = text)
