@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="channel_ringing">Звонящий будильник</string>
+    <string name="channel_upcoming">Скорый будильник</string>
+    <string name="channel_gave_up">Будильник сдался</string>
+    <string name="notif_stop_phone">Выключается только на телефоне</string>
+    <string name="notif_stop_qr">Выключается только сканом твоего кода</string>
+    <string name="upcoming_title">Будильник в %1$s</string>
+    <string name="upcoming_dismiss_early">Выключить заранее</string>
+    <string name="gave_up_title">Будильник на %1$s сдался</string>
+    <string name="gave_up_text">Звонил до лимита автостопа, никто не пришёл.</string>
+
+    <string name="start_failed_title">Будильник не смог запуститься</string>
+    <string name="start_failed_text">Android не дал его запустить. Открой приложение и исправь оранжевые точки.</string>
+
+    <string name="back">Назад</string>
+    <string name="save">Сохранить</string>
+    <string name="cancel">Отмена</string>
+    <string name="delete">Удалить</string>
+    <string name="change">Сменить</string>
+    <string name="done">Готово</string>
+    <string name="ok">ОК</string>
+    <string name="fix">Исправить</string>
+    <string name="settings">Настройки</string>
+
+    <string name="qr_codes">Коды</string>
+    <string name="new_alarm">Новый будильник</string>
+    <string name="edit_alarm">Будильник</string>
+    <string name="no_alarms_title">Будильников нет.</string>
+    <string name="no_alarms_text">Спи сколько влезет. Или заведи один ниже.</string>
+    <string name="rings_in">через %1$s</string>
+    <plurals name="days">
+        <item quantity="one">%d день</item>
+        <item quantity="few">%d дня</item>
+        <item quantity="many">%d дней</item>
+        <item quantity="other">%d дня</item>
+    </plurals>
+    <plurals name="hours">
+        <item quantity="one">%d ч</item>
+        <item quantity="few">%d ч</item>
+        <item quantity="many">%d ч</item>
+        <item quantity="other">%d ч</item>
+    </plurals>
+    <plurals name="minutes">
+        <item quantity="one">%d мин</item>
+        <item quantity="few">%d мин</item>
+        <item quantity="many">%d мин</item>
+        <item quantity="other">%d мин</item>
+    </plurals>
+    <plurals name="health_issues">
+        <item quantity="one">%d настройка может заглушить будильник</item>
+        <item quantity="few">%d настройки могут заглушить будильник</item>
+        <item quantity="many">%d настроек могут заглушить будильник</item>
+        <item quantity="other">%d настройки могут заглушить будильник</item>
+    </plurals>
+    <string name="next_skipped">Следующий пропущен</string>
+    <string name="snoozed_until">Отложен до %1$s</string>
+
+    <string name="days_once">Один раз</string>
+    <string name="days_every">Каждый день</string>
+    <string name="days_weekdays">По будням</string>
+    <string name="days_weekend">По выходным</string>
+
+    <string name="repeat">Повтор</string>
+    <string name="repeat_hint_once">Дни не выбраны: прозвонит один раз и выключится.</string>
+    <string name="repeat_hint_days">Звонит в выбранные дни.</string>
+    <string name="label">Подпись</string>
+
+    <string name="how_to_stop">Как выключать</string>
+    <string name="mode_button">Обычный</string>
+    <string name="mode_button_desc">Протащить слайдер до конца. Тапа мало.</string>
+    <string name="mode_qr">QR-код</string>
+    <string name="mode_qr_desc">Отсканируй распечатанный код в другой комнате. Кнопка даёт тишину, чтобы дойти: сначала %1$d мин, потом каждый раз на минуту меньше, до одной. Не успел — снова орёт.</string>
+    <string name="mode_shake">Тряска</string>
+    <string name="mode_shake_desc">Пока трясёшь — молчит, остановился — снова орёт. Чем сильнее трясёшь, тем быстрее копится.</string>
+    <string name="shake_level">Сколько трясти</string>
+    <string name="shake_light">Чуть</string>
+    <string name="shake_aaagh">Аааагх</string>
+    <string name="shake_earthquake">Землетрясение</string>
+    <string name="shake_it">Тряси.</string>
+    <string name="shake_hint">Тряси сильно. Сильнее — быстрее. Остановишься — заорёт.</string>
+    <string name="notif_stop_shake">Выключается только тряской телефона</string>
+    <string name="quiet_minutes">Тишина, чтобы дойти: %1$d мин</string>
+    <string name="no_codes_warning">Кодов пока нет. Сначала создай и распечатай код, иначе выключить можно будет только через «потерял код».</string>
+    <string name="go_make_code">Сделать код</string>
+
+    <string name="sound">Звук</string>
+    <string name="sound_klaxon">Аааааагх</string>
+    <string name="sound_beeps">Пип-пип</string>
+    <string name="sound_dawn">Рассветный звон</string>
+    <string name="sound_system">Мелодия будильника телефона</string>
+    <string name="sound_silent">Без звука</string>
+    <string name="sound_file">Свой файл</string>
+    <string name="sound_pick_file">Выбрать файл…</string>
+    <string name="volume">Громкость: %1$d%%</string>
+    <string name="ramp">Нарастание</string>
+    <string name="ramp_off">Сразу громко</string>
+    <string name="ramp_30s">30 с</string>
+    <string name="ramp_1m">1 мин</string>
+    <string name="ramp_2m">2 мин</string>
+    <string name="ramp_5m">5 мин</string>
+    <string name="vibrate">Вибрация</string>
+
+    <string name="light">Свет</string>
+    <string name="light_none">Нет</string>
+    <string name="light_sunrise">Рассвет</string>
+    <string name="light_strobe">Стробоскоп</string>
+    <string name="sunrise_minutes">Свет за %1$d мин до звука</string>
+    <string name="sunrise_hint">Экран и фонарик медленно разгораются от тёмно-красного к тёплому белому. Положи телефон экраном вверх.</string>
+    <string name="strobe_hint">Фонарик и экран мигают, пока звонит. Положи телефон экраном вверх.</string>
+    <string name="strobe_warning_title">Мигающий свет</string>
+    <string name="strobe_warning_text">Стробоскоп мигает два раза в секунду. Не включай его, если у тебя или у кого-то в комнате светочувствительная эпилепсия.</string>
+    <string name="strobe_enable">Включить строб</string>
+    <string name="nothing_wakes_you">Ни звука, ни света, ни вибрации: такой будильник никого не разбудит.</string>
+
+    <string name="snooze">Отложить</string>
+    <string name="snooze_off">Нельзя</string>
+    <string name="minutes_n">%1$d мин</string>
+    <plurals name="snooze_max">
+        <item quantity="one">Не больше %d раза</item>
+        <item quantity="few">Не больше %d раз</item>
+        <item quantity="many">Не больше %d раз</item>
+        <item quantity="other">Не больше %d раза</item>
+    </plurals>
+    <string name="skip_next">Пропустить следующий</string>
+    <string name="test">Проверить</string>
+
+    <string name="wake_up">Подъём.</string>
+    <string name="go_scan">Иди сканируй код.</string>
+    <string name="tap_it">Тыкай. Быстрее.</string>
+    <string name="sunrise_title">Рассвет.</string>
+    <string name="early_title">Выключить заранее</string>
+    <string name="sunrise_until">Звук в %1$s</string>
+    <string name="test_ring">Проверка. Ничего не сохраняется.</string>
+    <string name="already_awake">Уже проснулся? Выключить</string>
+    <string name="slide_to_wake">Сдвинь, чтобы встать</string>
+    <string name="point_at_code">Наведи камеру на свой код</string>
+    <string name="wrong_code">Не тот код</string>
+    <string name="torch_on">Включить фонарик</string>
+    <string name="torch_off">Выключить фонарик</string>
+    <string name="camera_needed">Чтобы отсканировать код, нужна камера.</string>
+    <string name="allow_camera">Разрешить камеру</string>
+    <string name="going_to_code">Иду к коду: %1$d мин тишины</string>
+    <string name="quiet_left">Тишина ещё %1$s. Успей отсканировать.</string>
+    <string name="lost_code">О нет! Я потерял код!</string>
+    <string name="tap_button">ТЫК</string>
+    <string name="tap_hint">Тыкай яростно. Вяло не дотыкаешь.</string>
+    <string name="snooze_button">Ещё %1$d мин · %2$s</string>
+    <plurals name="snooze_left">
+        <item quantity="one">остался %d раз</item>
+        <item quantity="few">осталось %d раза</item>
+        <item quantity="many">осталось %d раз</item>
+        <item quantity="other">осталось %d раза</item>
+    </plurals>
+
+    <string name="qr_intro_title">Повесь код туда, куда придётся дойти.</string>
+    <string name="qr_intro">Распечатай код и повесь в другой комнате: в ванной, на кухне. Любой из этих кодов выключает QR-будильник.</string>
+    <string name="create_code">Создать и распечатать код</string>
+    <string name="register_barcode">Взять штрихкод, который уже есть</string>
+    <string name="scan_own_hint">Отсканируй любой штрихкод, который никуда не денется, например на бутылке шампуня.</string>
+    <string name="code_generated">Распечатанный код</string>
+    <string name="code_registered">Свой штрихкод</string>
+    <string name="print">Печать</string>
+    <string name="code_name_title">Где он будет висеть?</string>
+    <string name="code_default_name">Ванная</string>
+    <string name="code_duplicate">Этот код уже в списке.</string>
+    <string name="last_code_blocked">Это последний код, а QR-будильник включён. Сначала переключи будильник на другой режим.</string>
+    <string name="print_instructions">Отсканируй этот код, чтобы выключить будильник. Держи его подальше от кровати.</string>
+
+    <string name="onboarding_title">Убедимся, что он зазвонит.</string>
+    <string name="health_title">Здоровье будильника</string>
+    <string name="health_intro">Телефоны любят глушить приложения ради батареи. Каждая оранжевая точка — способ, которым будильник может промолчать.</string>
+    <string name="h_notifications">Уведомления</string>
+    <string name="h_notifications_text">Без них Android прячет экран будильника.</string>
+    <string name="h_fullscreen">Будильник на весь экран</string>
+    <string name="h_fullscreen_text">Позволяет будильнику занять заблокированный экран.</string>
+    <string name="h_exact">Точные будильники</string>
+    <string name="h_exact_text">Без этого Android может прозвонить на несколько минут позже.</string>
+    <string name="h_battery">Без ограничений батареи</string>
+    <string name="h_battery_text">Экономия батареи может убить будильник до звонка. Выбери «Не оптимизировать» или «Без ограничений».</string>
+    <string name="h_vendor">Ограничения производителя</string>
+    <string name="h_vendor_text">Многие телефоны добавляют поверх Android свои переключатели. На странице приложения разреши всё, что найдёшь: автозапуск, показ на экране блокировки, всплывающие окна в фоне, работу без ограничений батареи. Проверить это телефон нам не даёт, поэтому отметь сам.</string>
+    <string name="h_vendor_guide">Инструкция для этого телефона</string>
+    <string name="h_vendor_done">Сделал</string>
+    <string name="h_vendor_undo">Ещё не сделал</string>
+    <string name="h_camera">Камера</string>
+    <string name="h_camera_text">Для QR-кодов. Лучше разрешить сейчас, чем в полусне.</string>
+    <string name="h_watch_text">У уведомления будильника нет кнопок: часы его покажут, но выключить не смогут.</string>
+    <string name="onboarding_done">Готово, пусти</string>
+
+    <string name="auto_stop">Сам замолчит через</string>
+    <string name="never">Никогда</string>
+    <string name="auto_stop_hint">Чтобы не орал весь день, пока тебя нет дома. Когда сдастся, придёт уведомление.</string>
+    <string name="upcoming_notice">Напоминание за два часа</string>
+    <string name="upcoming_notice_hint">С кнопкой «выключить заранее». Заранее тоже придётся выполнить задание будильника.</string>
+    <string name="theme">Тема</string>
+    <string name="theme_dark">Ночь</string>
+    <string name="theme_light">День</string>
+    <string name="theme_system">Как в телефоне</string>
+    <string name="language">Язык</string>
+    <string name="language_system">Как в телефоне</string>
+    <string name="about">О приложении</string>
+    <string name="source_code">Исходный код на GitHub</string>
+    <string name="about_text">Версия %1$s. Свободная программа под GNU GPL v3. Без рекламы, без трекинга, без доступа в интернет.\n© 2026 Kirill Semenchenko. Шрифт: Unbounded, SIL Open Font License.</string>
+</resources>

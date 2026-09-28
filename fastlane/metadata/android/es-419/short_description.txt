@@ -1,0 +1,1 @@
+Una alarma sin negociación: solo se apaga escaneando, agitando o deslizando.

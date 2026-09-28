@@ -1,0 +1,76 @@
+package dev.smoreg.raa.alarm
+
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
+import android.os.Build
+import dev.smoreg.raa.MainActivity
+import dev.smoreg.raa.data.Alarm
+import dev.smoreg.raa.data.AlarmDao
+import dev.smoreg.raa.data.Settings
+import java.time.ZonedDateTime
+
+enum class Trigger { SUNRISE, RING, UPCOMING, WATCHDOG }
+
+class Scheduler(
+    private val context: Context,
+    private val alarms: AlarmDao,
+    private val settings: Settings,
+) {
+    private val am = context.getSystemService(AlarmManager::class.java)
+
+    suspend fun rescheduleAll() = alarms.all().forEach { schedule(it) }
+
+    suspend fun schedule(alarm: Alarm) {
+        cancel(alarm.id)
+        val now = ZonedDateTime.now()
+        val ring = NextTrigger.ring(alarm, now) ?: return
+        val ringMs = ring.toInstant().toEpochMilli()
+
+        setClock(ringMs, AlarmReceiver.pending(context, Trigger.RING, alarm.id, ringMs))
+        NextTrigger.sunrise(alarm, ring, now)?.let {
+            setClock(it.toInstant().toEpochMilli(), AlarmReceiver.pending(context, Trigger.SUNRISE, alarm.id, ringMs))
+        }
+        val notice = ring.minusHours(2)
+        if (settings.current().upcomingNotice && alarm.snoozeUntil == 0L && notice.isAfter(now)) {
+            am.set(
+                AlarmManager.RTC,
+                notice.toInstant().toEpochMilli(),
+                AlarmReceiver.pending(context, Trigger.UPCOMING, alarm.id, ringMs),
+            )
+        }
+    }
+
+    fun cancel(alarmId: Long) {
+        for (t in listOf(Trigger.SUNRISE, Trigger.RING, Trigger.UPCOMING)) {
+            AlarmReceiver.existing(context, t, alarmId)?.let(am::cancel)
+        }
+        Notifications.cancelUpcoming(context, alarmId)
+    }
+
+    /** Re-raises a killed ringing process within a minute; see [RingingService]. */
+    fun armWatchdog(alarmId: Long) {
+        val at = System.currentTimeMillis() + 60_000
+        val op = AlarmReceiver.pending(context, Trigger.WATCHDOG, alarmId, at)
+        if (canExact()) am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, at, op)
+        else am.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, at, op)
+    }
+
+    fun disarmWatchdog(alarmId: Long) {
+        AlarmReceiver.existing(context, Trigger.WATCHDOG, alarmId)?.let(am::cancel)
+    }
+
+    fun canExact() = Build.VERSION.SDK_INT < Build.VERSION_CODES.S || am.canScheduleExactAlarms()
+
+    private fun setClock(at: Long, op: PendingIntent) {
+        if (canExact()) {
+            val show = PendingIntent.getActivity(
+                context, 0, Intent(context, MainActivity::class.java), PendingIntent.FLAG_IMMUTABLE,
+            )
+            am.setAlarmClock(AlarmManager.AlarmClockInfo(at, show), op)
+        } else {
+            am.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, at, op)
+        }
+    }
+}

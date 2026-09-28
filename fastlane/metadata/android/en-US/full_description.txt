@@ -1,0 +1,26 @@
+An alarm clock for people who switch alarms off in their sleep.
+
+RiseAndAaaaaaagh! stops only when you actually do something:
+
+• QR code — print a code, stick it up in another room and scan it. The button buys you a quiet walk there: 3 minutes, then 2, then 1. Miss it and it screams again.
+• Shake — silent while you shake, screaming the moment you stop. The harder you shake, the faster it fills. Pick a little, Aaaagh or Earthquake.
+• Regular — a slider you have to drag all the way. A sleepy tap is not enough.
+
+Waking up
+• Sound that grows from a whisper, at the volume you pick.
+• Sunrise light: the screen and flashlight glow from deep red to warm white before the sound starts.
+• Strobe, with a photosensitivity warning.
+• Your own music file, the phone's alarm sound, or the bundled sounds.
+
+Hard to escape
+• The notification has no buttons, so a smartwatch can show the alarm but cannot stop it.
+• Volume keys and Back do nothing while it rings.
+• A reboot or a killed app resumes the ring.
+• Lost your code? A last-resort shake appears after the third quiet walk.
+• Auto-stop after 15, 30 or 60 minutes, so it does not scream all day while you are away.
+
+Alarm health
+A checklist of the settings phones use to silence apps — notifications, full-screen alarms, exact alarms, battery limits — with a button to fix each.
+
+Free software under the GNU GPL v3. No ads, no tracking, no accounts, and no internet permission at all.
+Source code: https://github.com/smoreg/rise_and_aaaaaarhg

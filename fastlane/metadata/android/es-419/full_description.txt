@@ -1,0 +1,26 @@
+Una alarma para quienes la apagan dormidos.
+
+RiseAndAaaaaaagh! solo se calla cuando haces algo de verdad:
+
+• Código QR — imprime un código, pégalo en otra habitación y escanéalo. El botón te da silencio para llegar: 3 minutos, luego 2, luego 1. Si no llegas, vuelve a gritar.
+• Agitar — calla mientras agitas y grita en cuanto paras. Cuanto más fuerte, más rápido. Niveles: Un poco, Aaaagh y Terremoto.
+• Normal — un deslizador que hay que arrastrar hasta el final. Un toque dormido no basta.
+
+Despertar
+• El sonido sube desde un susurro hasta el volumen que elijas.
+• Luz de amanecer: la pantalla y la linterna pasan del rojo oscuro al blanco cálido antes del sonido.
+• Estroboscopio, con aviso de fotosensibilidad.
+• Tu propio archivo de música, el sonido de alarma del teléfono o los sonidos incluidos.
+
+Difícil de escapar
+• La notificación no tiene botones: un reloj inteligente la muestra pero no puede apagarla.
+• Los botones de volumen y Atrás no hacen nada mientras suena.
+• Tras reiniciar o si se cierra la app, la alarma sigue sonando.
+• ¿Perdiste el código? Desde el tercer silencio aparece una salida de emergencia agitando.
+• Parada automática a los 15, 30 o 60 minutos, para que no grite todo el día si no estás.
+
+Salud de la alarma
+Una lista de los ajustes con los que los teléfonos silencian apps — notificaciones, alarma a pantalla completa, alarmas exactas, límites de batería — con un botón para arreglar cada uno.
+
+Software libre bajo la GNU GPL v3. Sin anuncios, sin rastreo, sin cuentas y sin permiso de internet.
+Código fuente: https://github.com/smoreg/rise_and_aaaaaarhg

@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="channel_ringing">正在响的闹钟</string>
+    <string name="channel_upcoming">即将到来的闹钟</string>
+    <string name="channel_gave_up">闹钟放弃了</string>
+    <string name="notif_stop_phone">只能在手机上关闭</string>
+    <string name="notif_stop_qr">只能扫描你的二维码关闭</string>
+    <string name="upcoming_title">%1$s 的闹钟</string>
+    <string name="upcoming_dismiss_early">提前关闭</string>
+    <string name="gave_up_title">%1$s 的闹钟放弃了</string>
+    <string name="gave_up_text">它一直响到自动停止的时限，没有人来。</string>
+
+    <string name="start_failed_title">闹钟无法启动</string>
+    <string name="start_failed_text">Android 拒绝启动它。打开应用，修复橙色圆点。</string>
+
+    <string name="back">返回</string>
+    <string name="save">保存</string>
+    <string name="cancel">取消</string>
+    <string name="delete">删除</string>
+    <string name="change">更换</string>
+    <string name="done">完成</string>
+    <string name="ok">好</string>
+    <string name="fix">修复</string>
+    <string name="settings">设置</string>
+
+    <string name="qr_codes">二维码</string>
+    <string name="new_alarm">新闹钟</string>
+    <string name="edit_alarm">闹钟</string>
+    <string name="no_alarms_title">没有闹钟。</string>
+    <string name="no_alarms_text">想睡多久睡多久。或者在下面设一个。</string>
+    <string name="rings_in">%1$s后响</string>
+    <plurals name="days">
+        <item quantity="other">%d 天</item>
+    </plurals>
+    <plurals name="hours">
+        <item quantity="other">%d 小时</item>
+    </plurals>
+    <plurals name="minutes">
+        <item quantity="other">%d 分钟</item>
+    </plurals>
+    <plurals name="health_issues">
+        <item quantity="other">%d 项设置可能让闹钟不响</item>
+    </plurals>
+    <string name="next_skipped">已跳过下一次</string>
+    <string name="snoozed_until">已推迟到 %1$s</string>
+
+    <string name="days_once">仅一次</string>
+    <string name="days_every">每天</string>
+    <string name="days_weekdays">工作日</string>
+    <string name="days_weekend">周末</string>
+
+    <string name="repeat">重复</string>
+    <string name="repeat_hint_once">没有选日子：响一次后自动关闭。</string>
+    <string name="repeat_hint_days">在选中的日子响。</string>
+    <string name="label">标签</string>
+
+    <string name="how_to_stop">关闭方式</string>
+    <string name="mode_button">普通</string>
+    <string name="mode_button_desc">一直滑到底。点一下不算。</string>
+    <string name="mode_qr">二维码</string>
+    <string name="mode_qr_desc">扫描贴在另一个房间的二维码。按钮给你安静时间走过去：先 %1$d 分钟，之后每次少一分钟，最少一分钟。没赶上，它会再次尖叫。</string>
+    <string name="mode_shake">摇晃</string>
+    <string name="mode_shake_desc">你摇的时候它安静，一停下又开始尖叫。摇得越用力，进度涨得越快。</string>
+    <string name="shake_level">要摇多少</string>
+    <string name="shake_light">一点点</string>
+    <string name="shake_aaagh">啊啊啊</string>
+    <string name="shake_earthquake">地震</string>
+    <string name="shake_it">摇起来。</string>
+    <string name="shake_hint">用力摇。越用力越快。一停下就会尖叫。</string>
+    <string name="notif_stop_shake">只能摇晃手机关闭</string>
+    <string name="quiet_minutes">走到二维码的安静时间：%1$d 分钟</string>
+    <string name="no_codes_warning">你还没有二维码。先生成并打印一个，否则这个闹钟只能用“丢了二维码”的备用方式关闭。</string>
+    <string name="go_make_code">生成二维码</string>
+
+    <string name="sound">声音</string>
+    <string name="sound_klaxon">啊啊啊啊啊</string>
+    <string name="sound_beeps">哔哔</string>
+    <string name="sound_dawn">黎明铃声</string>
+    <string name="sound_system">手机的闹钟铃声</string>
+    <string name="sound_silent">无声</string>
+    <string name="sound_file">你的文件</string>
+    <string name="sound_pick_file">选择文件…</string>
+    <string name="volume">音量：%1$d%%</string>
+    <string name="ramp">逐渐变响</string>
+    <string name="ramp_off">一开始就很响</string>
+    <string name="ramp_30s">30 秒</string>
+    <string name="ramp_1m">1 分钟</string>
+    <string name="ramp_2m">2 分钟</string>
+    <string name="ramp_5m">5 分钟</string>
+    <string name="vibrate">振动</string>
+
+    <string name="light">灯光</string>
+    <string name="light_none">无</string>
+    <string name="light_sunrise">日出</string>
+    <string name="light_strobe">频闪</string>
+    <string name="sunrise_minutes">声音响起前 %1$d 分钟开始亮灯</string>
+    <string name="sunrise_hint">屏幕和手电筒慢慢变亮，从暗红到暖白。把手机屏幕朝上放。</string>
+    <string name="strobe_hint">响铃时手电筒和屏幕会闪烁。把手机屏幕朝上放。</string>
+    <string name="strobe_warning_title">闪烁的灯光</string>
+    <string name="strobe_warning_text">频闪每秒闪两次。如果你或房间里的人有光敏性癫痫，请不要使用。</string>
+    <string name="strobe_enable">使用频闪</string>
+    <string name="nothing_wakes_you">没有声音、灯光或振动：这个闹钟叫不醒任何人。</string>
+
+    <string name="snooze">稍后提醒</string>
+    <string name="snooze_off">关闭</string>
+    <string name="minutes_n">%1$d 分钟</string>
+    <plurals name="snooze_max">
+        <item quantity="other">最多 %d 次</item>
+    </plurals>
+    <string name="skip_next">跳过下一次</string>
+    <string name="test">试响</string>
+
+    <string name="wake_up">起床。</string>
+    <string name="go_scan">去扫你的二维码。</string>
+    <string name="tap_it">点。再快点。</string>
+    <string name="sunrise_title">日出。</string>
+    <string name="early_title">提前关闭</string>
+    <string name="sunrise_until">%1$s 响铃</string>
+    <string name="test_ring">试响。不会保存任何内容。</string>
+    <string name="already_awake">已经醒了？关掉它</string>
+    <string name="slide_to_wake">滑动起床</string>
+    <string name="point_at_code">把相机对准你的二维码</string>
+    <string name="wrong_code">不是你的二维码</string>
+    <string name="torch_on">打开手电筒</string>
+    <string name="torch_off">关闭手电筒</string>
+    <string name="camera_needed">扫描二维码需要相机。</string>
+    <string name="allow_camera">允许使用相机</string>
+    <string name="going_to_code">我去扫码：安静 %1$d 分钟</string>
+    <string name="quiet_left">还能安静 %1$s。及时扫码。</string>
+    <string name="lost_code">糟了！我的二维码丢了！</string>
+    <string name="tap_button">点</string>
+    <string name="tap_hint">使劲点。慢慢点永远点不完。</string>
+    <string name="snooze_button">再睡 %1$d 分钟 · %2$s</string>
+    <plurals name="snooze_left">
+        <item quantity="other">还剩 %d 次</item>
+    </plurals>
+
+    <string name="qr_intro_title">把二维码放在必须走过去的地方。</string>
+    <string name="qr_intro">打印一个二维码，贴在另一个房间：浴室、厨房。任何一个二维码都能关掉二维码闹钟。</string>
+    <string name="create_code">生成并打印二维码</string>
+    <string name="register_barcode">用我已有的条形码</string>
+    <string name="scan_own_hint">扫描任何不会移动的条形码，比如洗发水瓶上的。</string>
+    <string name="code_generated">打印的二维码</string>
+    <string name="code_registered">已有的条形码</string>
+    <string name="print">打印</string>
+    <string name="code_name_title">要挂在哪里？</string>
+    <string name="code_default_name">浴室</string>
+    <string name="code_duplicate">这个码已经在列表里了。</string>
+    <string name="last_code_blocked">这是你最后一个二维码，而且有二维码闹钟开着。请先把那个闹钟改成其他方式。</string>
+    <string name="print_instructions">扫描这个二维码来关闭闹钟。把它放在离床远的地方。</string>
+
+    <string name="onboarding_title">确保它会响。</string>
+    <string name="health_title">闹钟健康检查</string>
+    <string name="health_intro">手机喜欢为了省电让应用安静。每个橙色圆点都是闹钟可能不响的原因。</string>
+    <string name="h_notifications">通知</string>
+    <string name="h_notifications_text">没有通知权限，Android 会隐藏闹钟界面。</string>
+    <string name="h_fullscreen">全屏闹钟</string>
+    <string name="h_fullscreen_text">让闹钟可以占据锁定的屏幕。</string>
+    <string name="h_exact">精确闹钟</string>
+    <string name="h_exact_text">没有它，Android 可能会晚几分钟才响。</string>
+    <string name="h_battery">无电池限制</string>
+    <string name="h_battery_text">省电功能可能在闹钟响之前把它杀掉。请选择“不优化”或“无限制”。</string>
+    <string name="h_vendor">手机厂商的限制</string>
+    <string name="h_vendor_text">很多手机在 Android 之上加了自己的开关。在应用详情页里允许你能找到的一切：自启动、锁屏显示、后台弹出界面、无电池限制。手机不会告诉我们结果，所以请自己标记。</string>
+    <string name="h_vendor_guide">这部手机的说明</string>
+    <string name="h_vendor_done">已完成</string>
+    <string name="h_vendor_undo">还没有</string>
+    <string name="h_camera">相机</string>
+    <string name="h_camera_text">用于二维码。现在就允许，别等到半睡半醒时。</string>
+    <string name="h_watch_text">闹钟通知没有按钮：手表能显示它，但关不掉它。</string>
+    <string name="onboarding_done">好了，让我进去</string>
+
+    <string name="auto_stop">自动停止时间</string>
+    <string name="never">从不</string>
+    <string name="auto_stop_hint">免得你不在家时它叫一整天。它放弃时你会收到通知。</string>
+    <string name="upcoming_notice">提前两小时提醒</string>
+    <string name="upcoming_notice_hint">带有提前关闭的按钮。提前关闭同样需要完成闹钟的任务。</string>
+    <string name="theme">主题</string>
+    <string name="theme_dark">夜晚</string>
+    <string name="theme_light">白天</string>
+    <string name="theme_system">跟随手机</string>
+    <string name="language">语言</string>
+    <string name="language_system">跟随手机</string>
+    <string name="about">关于</string>
+    <string name="source_code">GitHub 上的源代码</string>
+    <string name="about_text">版本 %1$s。基于 GNU GPL v3 的自由软件。无广告、无追踪、无网络访问。\n© 2026 Kirill Semenchenko。字体：Unbounded，SIL Open Font License。</string>
+</resources>

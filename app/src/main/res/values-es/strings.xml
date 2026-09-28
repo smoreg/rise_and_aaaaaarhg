@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="channel_ringing">Alarma sonando</string>
+    <string name="channel_upcoming">Próxima alarma</string>
+    <string name="channel_gave_up">La alarma se rindió</string>
+    <string name="notif_stop_phone">Solo se apaga en el teléfono</string>
+    <string name="notif_stop_qr">Solo se apaga escaneando tu código</string>
+    <string name="upcoming_title">Alarma a las %1$s</string>
+    <string name="upcoming_dismiss_early">Apagar antes</string>
+    <string name="gave_up_title">La alarma de las %1$s se rindió</string>
+    <string name="gave_up_text">Sonó hasta el límite de parada automática y nadie vino.</string>
+
+    <string name="start_failed_title">Tu alarma no pudo arrancar</string>
+    <string name="start_failed_text">Android no la dejó arrancar. Abre la app y arregla los puntos naranjas.</string>
+
+    <string name="back">Atrás</string>
+    <string name="save">Guardar</string>
+    <string name="cancel">Cancelar</string>
+    <string name="delete">Borrar</string>
+    <string name="change">Cambiar</string>
+    <string name="done">Listo</string>
+    <string name="ok">OK</string>
+    <string name="fix">Arreglar</string>
+    <string name="settings">Ajustes</string>
+
+    <string name="qr_codes">Códigos</string>
+    <string name="new_alarm">Nueva alarma</string>
+    <string name="edit_alarm">Alarma</string>
+    <string name="no_alarms_title">No hay alarmas.</string>
+    <string name="no_alarms_text">Duerme lo que quieras. O crea una abajo.</string>
+    <string name="rings_in">en %1$s</string>
+    <plurals name="days">
+        <item quantity="one">%d día</item>
+        <item quantity="many">%d días</item>
+        <item quantity="other">%d días</item>
+    </plurals>
+    <plurals name="hours">
+        <item quantity="one">%d h</item>
+        <item quantity="many">%d h</item>
+        <item quantity="other">%d h</item>
+    </plurals>
+    <plurals name="minutes">
+        <item quantity="one">%d min</item>
+        <item quantity="many">%d min</item>
+        <item quantity="other">%d min</item>
+    </plurals>
+    <plurals name="health_issues">
+        <item quantity="one">%d ajuste puede silenciar tu alarma</item>
+        <item quantity="many">%d ajustes pueden silenciar tu alarma</item>
+        <item quantity="other">%d ajustes pueden silenciar tu alarma</item>
+    </plurals>
+    <string name="next_skipped">La próxima está saltada</string>
+    <string name="snoozed_until">Pospuesta hasta las %1$s</string>
+
+    <string name="days_once">Una vez</string>
+    <string name="days_every">Todos los días</string>
+    <string name="days_weekdays">Entre semana</string>
+    <string name="days_weekend">Fines de semana</string>
+
+    <string name="repeat">Repetir</string>
+    <string name="repeat_hint_once">Sin días elegidos: suena una vez y se apaga.</string>
+    <string name="repeat_hint_days">Suena los días elegidos.</string>
+    <string name="label">Etiqueta</string>
+
+    <string name="how_to_stop">Cómo se apaga</string>
+    <string name="mode_button">Normal</string>
+    <string name="mode_button_desc">Desliza hasta el final. Un toque no basta.</string>
+    <string name="mode_qr">Código QR</string>
+    <string name="mode_qr_desc">Escanea tu código impreso en otra habitación. El botón te da silencio para llegar: %1$d min, luego un minuto menos cada vez, hasta uno. Si no llegas, vuelve a gritar.</string>
+    <string name="mode_shake">Agitar</string>
+    <string name="mode_shake_desc">Calla mientras agitas y vuelve a gritar en cuanto paras. Cuanto más fuerte agitas, más rápido se llena.</string>
+    <string name="shake_level">Cuánto agitar</string>
+    <string name="shake_light">Un poco</string>
+    <string name="shake_aaagh">Aaaagh</string>
+    <string name="shake_earthquake">Terremoto</string>
+    <string name="shake_it">Agítalo.</string>
+    <string name="shake_hint">Agita fuerte. Más fuerte, más rápido. Si paras, grita.</string>
+    <string name="notif_stop_shake">Solo se apaga agitando el teléfono</string>
+    <string name="quiet_minutes">Silencio para llegar al código: %1$d min</string>
+    <string name="no_codes_warning">Todavía no tienes códigos. Crea e imprime uno primero, o esta alarma solo se apagará con el plan B de código perdido.</string>
+    <string name="go_make_code">Crear un código</string>
+
+    <string name="sound">Sonido</string>
+    <string name="sound_klaxon">Aaaaaaagh</string>
+    <string name="sound_beeps">Bip bip</string>
+    <string name="sound_dawn">Campanas del amanecer</string>
+    <string name="sound_system">Sonido de alarma del teléfono</string>
+    <string name="sound_silent">Sin sonido</string>
+    <string name="sound_file">Tu archivo</string>
+    <string name="sound_pick_file">Elegir un archivo…</string>
+    <string name="volume">Volumen: %1$d%%</string>
+    <string name="ramp">Sube poco a poco</string>
+    <string name="ramp_off">Fuerte de golpe</string>
+    <string name="ramp_30s">30 s</string>
+    <string name="ramp_1m">1 min</string>
+    <string name="ramp_2m">2 min</string>
+    <string name="ramp_5m">5 min</string>
+    <string name="vibrate">Vibrar</string>
+
+    <string name="light">Luz</string>
+    <string name="light_none">Ninguna</string>
+    <string name="light_sunrise">Amanecer</string>
+    <string name="light_strobe">Estroboscopio</string>
+    <string name="sunrise_minutes">La luz empieza %1$d min antes del sonido</string>
+    <string name="sunrise_hint">La pantalla y la linterna se encienden despacio, del rojo oscuro al blanco cálido. Deja el teléfono boca arriba.</string>
+    <string name="strobe_hint">La linterna y la pantalla parpadean mientras suena. Deja el teléfono boca arriba.</string>
+    <string name="strobe_warning_title">Luz intermitente</string>
+    <string name="strobe_warning_text">El estroboscopio parpadea dos veces por segundo. No lo uses si tú o alguien en la habitación tiene epilepsia fotosensible.</string>
+    <string name="strobe_enable">Usar estroboscopio</string>
+    <string name="nothing_wakes_you">Sin sonido, sin luz y sin vibración: esta alarma no despertará a nadie.</string>
+
+    <string name="snooze">Posponer</string>
+    <string name="snooze_off">No</string>
+    <string name="minutes_n">%1$d min</string>
+    <plurals name="snooze_max">
+        <item quantity="one">Como mucho %d vez</item>
+        <item quantity="many">Como mucho %d veces</item>
+        <item quantity="other">Como mucho %d veces</item>
+    </plurals>
+    <string name="skip_next">Saltar la próxima</string>
+    <string name="test">Probar</string>
+
+    <string name="wake_up">Arriba.</string>
+    <string name="go_scan">Ve a escanear tu código.</string>
+    <string name="tap_it">Toca. Más rápido.</string>
+    <string name="sunrise_title">Amanecer.</string>
+    <string name="early_title">Apagar antes</string>
+    <string name="sunrise_until">Sonido a las %1$s</string>
+    <string name="test_ring">Prueba. No se guarda nada.</string>
+    <string name="already_awake">¿Ya despierto? Apágala</string>
+    <string name="slide_to_wake">Desliza para levantarte</string>
+    <string name="point_at_code">Apunta la cámara a tu código</string>
+    <string name="wrong_code">Ese no es tu código</string>
+    <string name="torch_on">Encender la luz</string>
+    <string name="torch_off">Apagar la luz</string>
+    <string name="camera_needed">Hace falta la cámara para escanear tu código.</string>
+    <string name="allow_camera">Permitir la cámara</string>
+    <string name="going_to_code">Voy al código: %1$d min de silencio</string>
+    <string name="quiet_left">Silencio %1$s más. Escanea a tiempo.</string>
+    <string name="lost_code">¡Ay no! ¡Perdí mi código!</string>
+    <string name="tap_button">TOC</string>
+    <string name="tap_hint">Toca con ganas. Tocando despacio nunca llegas.</string>
+    <string name="snooze_button">%1$d min más · %2$s</string>
+    <plurals name="snooze_left">
+        <item quantity="one">queda %d</item>
+        <item quantity="many">quedan %d</item>
+        <item quantity="other">quedan %d</item>
+    </plurals>
+
+    <string name="qr_intro_title">Pon un código donde tengas que caminar.</string>
+    <string name="qr_intro">Imprime un código y pégalo en otra habitación: el baño, la cocina. Cualquiera de estos códigos apaga una alarma QR.</string>
+    <string name="create_code">Crear e imprimir un código</string>
+    <string name="register_barcode">Usar un código de barras que ya tengo</string>
+    <string name="scan_own_hint">Escanea cualquier código de barras que no se mueva, como el de tu botella de champú.</string>
+    <string name="code_generated">Código impreso</string>
+    <string name="code_registered">Código de barras propio</string>
+    <string name="print">Imprimir</string>
+    <string name="code_name_title">¿Dónde lo vas a colgar?</string>
+    <string name="code_default_name">Baño</string>
+    <string name="code_duplicate">Este código ya está en la lista.</string>
+    <string name="last_code_blocked">Es tu último código y hay una alarma QR activa. Primero cambia esa alarma a otro modo.</string>
+    <string name="print_instructions">Escanea este código para apagar tu alarma. Tenlo lejos de la cama.</string>
+
+    <string name="onboarding_title">Asegurémonos de que suene.</string>
+    <string name="health_title">Salud de la alarma</string>
+    <string name="health_intro">A los teléfonos les encanta silenciar apps para ahorrar batería. Cada punto naranja es una forma en que tu alarma podría quedarse callada.</string>
+    <string name="h_notifications">Notificaciones</string>
+    <string name="h_notifications_text">Sin ellas Android esconde la pantalla de la alarma.</string>
+    <string name="h_fullscreen">Alarma a pantalla completa</string>
+    <string name="h_fullscreen_text">Permite que la alarma ocupe la pantalla bloqueada.</string>
+    <string name="h_exact">Alarmas exactas</string>
+    <string name="h_exact_text">Sin esto Android puede sonar minutos tarde.</string>
+    <string name="h_battery">Sin límites de batería</string>
+    <string name="h_battery_text">El ahorro de batería puede matar la alarma antes de que suene. Elige «No optimizar» o «Sin restricciones».</string>
+    <string name="h_vendor">Restricciones del fabricante</string>
+    <string name="h_vendor_text">Muchos teléfonos añaden sus propios interruptores encima de Android. En la página de la app permite todo lo que encuentres: inicio automático, mostrar en la pantalla de bloqueo, ventanas emergentes en segundo plano, sin restricciones de batería. El teléfono no nos lo dice, así que márcalo tú.</string>
+    <string name="h_vendor_guide">Guía para este teléfono</string>
+    <string name="h_vendor_done">Hecho</string>
+    <string name="h_vendor_undo">Todavía no</string>
+    <string name="h_camera">Cámara</string>
+    <string name="h_camera_text">Para los códigos QR. Mejor permitirla ahora que medio dormido.</string>
+    <string name="h_watch_text">La notificación de la alarma no tiene botones: el reloj la muestra pero no puede apagarla.</string>
+    <string name="onboarding_done">Listo, déjame entrar</string>
+
+    <string name="auto_stop">Se calla sola después de</string>
+    <string name="never">Nunca</string>
+    <string name="auto_stop_hint">Para que no grite todo el día si no estás. Te llega una notificación cuando se rinde.</string>
+    <string name="upcoming_notice">Aviso dos horas antes</string>
+    <string name="upcoming_notice_hint">Con un botón para apagarla antes. Apagarla antes también pide la tarea de la alarma.</string>
+    <string name="theme">Tema</string>
+    <string name="theme_dark">Noche</string>
+    <string name="theme_light">Día</string>
+    <string name="theme_system">Como el teléfono</string>
+    <string name="language">Idioma</string>
+    <string name="language_system">Como el teléfono</string>
+    <string name="about">Acerca de</string>
+    <string name="source_code">Código fuente en GitHub</string>
+    <string name="about_text">Versión %1$s. Software libre bajo la GNU GPL v3. Sin anuncios, sin rastreo, sin acceso a internet.\n© 2026 Kirill Semenchenko. Fuente: Unbounded, SIL Open Font License.</string>
+</resources>

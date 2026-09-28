@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name" translatable="false">RiseAndAaaaaaagh!</string>
+    <string name="source_url" translatable="false">https://github.com/smoreg/rise_and_aaaaaarhg</string>
+
+    <string name="channel_ringing">Ringing alarm</string>
+    <string name="channel_upcoming">Upcoming alarm</string>
+    <string name="channel_gave_up">Alarm gave up</string>
+    <string name="notif_stop_phone">Stops only on the phone</string>
+    <string name="notif_stop_qr">Stops only when you scan your code</string>
+    <string name="upcoming_title">Alarm at %1$s</string>
+    <string name="upcoming_dismiss_early">Dismiss early</string>
+    <string name="gave_up_title">The %1$s alarm gave up</string>
+    <string name="gave_up_text">It rang until the auto-stop limit and nobody came.</string>
+
+    <string name="start_failed_title">Your alarm could not start</string>
+    <string name="start_failed_text">Android refused to start it. Open the app and fix the orange dots.</string>
+
+    <string name="back">Back</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete">Delete</string>
+    <string name="change">Change</string>
+    <string name="done">Done</string>
+    <string name="ok">OK</string>
+    <string name="ok_mark" translatable="false">✓</string>
+    <string name="fix">Fix</string>
+    <string name="settings">Settings</string>
+
+    <string name="qr_codes">Codes</string>
+    <string name="new_alarm">New alarm</string>
+    <string name="edit_alarm">Alarm</string>
+    <string name="no_alarms_title">No alarms.</string>
+    <string name="no_alarms_text">Sleep as long as you like. Or set one below.</string>
+    <string name="rings_in">in %1$s</string>
+    <plurals name="days">
+        <item quantity="one">%d day</item>
+        <item quantity="other">%d days</item>
+    </plurals>
+    <plurals name="hours">
+        <item quantity="one">%d h</item>
+        <item quantity="other">%d h</item>
+    </plurals>
+    <plurals name="minutes">
+        <item quantity="one">%d min</item>
+        <item quantity="other">%d min</item>
+    </plurals>
+    <plurals name="health_issues">
+        <item quantity="one">%d setting can keep your alarm silent</item>
+        <item quantity="other">%d settings can keep your alarm silent</item>
+    </plurals>
+    <string name="next_skipped">Next one skipped</string>
+    <string name="snoozed_until">Snoozed until %1$s</string>
+
+    <string name="days_once">Once</string>
+    <string name="days_every">Every day</string>
+    <string name="days_weekdays">Weekdays</string>
+    <string name="days_weekend">Weekends</string>
+
+    <string name="repeat">Repeat</string>
+    <string name="repeat_hint_once">No days picked: rings once, then switches off.</string>
+    <string name="repeat_hint_days">Rings on the picked days.</string>
+    <string name="label">Label</string>
+
+    <string name="how_to_stop">How it stops</string>
+    <string name="mode_button">Regular</string>
+    <string name="mode_button_desc">Slide all the way. A tap is not enough.</string>
+    <string name="mode_qr">QR code</string>
+    <string name="mode_qr_desc">Scan your printed code in another room. The button buys silence to walk there: %1$d min, then a minute less each time, down to one. Miss it and it screams again.</string>
+    <string name="mode_shake">Shake</string>
+    <string name="mode_shake_desc">Silent while you shake, screams again the moment you stop. The harder you shake, the faster it fills.</string>
+    <string name="shake_level">How much shaking</string>
+    <string name="shake_light">A little</string>
+    <string name="shake_aaagh">Aaaagh</string>
+    <string name="shake_earthquake">Earthquake</string>
+    <string name="shake_it">Shake it.</string>
+    <string name="shake_hint">Shake hard. Harder fills faster. Stop and it screams.</string>
+    <string name="notif_stop_shake">Stops only when you shake the phone</string>
+    <string name="quiet_minutes">Silence to reach the code: %1$d min</string>
+    <string name="no_codes_warning">You have no codes yet. Make and print one first, or this alarm can only be stopped with the lost-code fallback.</string>
+    <string name="go_make_code">Make a code</string>
+
+    <string name="sound">Sound</string>
+    <string name="sound_rise_and_shine" translatable="false">Rise and Shine</string>
+    <string name="sound_klaxon">Aaaaaaagh</string>
+    <string name="sound_beeps">Beep beep</string>
+    <string name="sound_dawn">Dawn chime</string>
+    <string name="sound_system">Phone\'s alarm sound</string>
+    <string name="sound_silent">No sound</string>
+    <string name="sound_file">Your file</string>
+    <string name="sound_pick_file">Pick a file…</string>
+    <string name="volume">Volume: %1$d%%</string>
+    <string name="ramp">Getting louder</string>
+    <string name="ramp_off">Loud at once</string>
+    <string name="ramp_30s">30 s</string>
+    <string name="ramp_1m">1 min</string>
+    <string name="ramp_2m">2 min</string>
+    <string name="ramp_5m">5 min</string>
+    <string name="vibrate">Vibrate</string>
+
+    <string name="light">Light</string>
+    <string name="light_none">None</string>
+    <string name="light_sunrise">Sunrise</string>
+    <string name="light_strobe">Strobe</string>
+    <string name="sunrise_minutes">Light starts %1$d min before the sound</string>
+    <string name="sunrise_hint">The screen and the flashlight brighten slowly, from deep red to warm white. Leave the phone face up.</string>
+    <string name="strobe_hint">Flashlight and screen flash while it rings. Leave the phone face up.</string>
+    <string name="strobe_warning_title">Flashing light</string>
+    <string name="strobe_warning_text">The strobe flashes twice a second. Do not use it if you or anyone in the room has photosensitive epilepsy.</string>
+    <string name="strobe_enable">Use strobe</string>
+    <string name="nothing_wakes_you">No sound, no light, no vibration: this alarm will not wake anyone.</string>
+
+    <string name="snooze">Snooze</string>
+    <string name="snooze_off">Off</string>
+    <string name="minutes_n">%1$d min</string>
+    <plurals name="snooze_max">
+        <item quantity="one">At most %d time</item>
+        <item quantity="other">At most %d times</item>
+    </plurals>
+    <string name="skip_next">Skip the next one</string>
+    <string name="test">Test</string>
+
+    <string name="wake_up">Wake up.</string>
+    <string name="go_scan">Go scan your code.</string>
+    <string name="tap_it">Tap. Faster.</string>
+    <string name="sunrise_title">Sunrise.</string>
+    <string name="early_title">Dismiss early</string>
+    <string name="sunrise_until">Sound at %1$s</string>
+    <string name="test_ring">Test ring. Nothing is saved.</string>
+    <string name="already_awake">Already awake? Stop it</string>
+    <string name="slide_to_wake">Slide to wake up</string>
+    <string name="point_at_code">Point the camera at your code</string>
+    <string name="wrong_code">Not your code</string>
+    <string name="torch_on">Turn on the light</string>
+    <string name="torch_off">Turn off the light</string>
+    <string name="camera_needed">The camera is needed to scan your code.</string>
+    <string name="allow_camera">Allow camera</string>
+    <string name="going_to_code">Going to the code: %1$d min of silence</string>
+    <string name="quiet_left">Silence for %1$s more. Scan in time.</string>
+    <string name="lost_code">Oh no! I lost my code!</string>
+    <string name="tap_button">TAP</string>
+    <string name="tap_hint">Tap like you mean it. Slow tapping never gets there.</string>
+    <string name="snooze_button">%1$d more min · %2$s</string>
+    <plurals name="snooze_left">
+        <item quantity="one">%d left</item>
+        <item quantity="other">%d left</item>
+    </plurals>
+
+    <string name="qr_intro_title">Put a code where you have to walk.</string>
+    <string name="qr_intro">Print a code and stick it up in another room: the bathroom, the kitchen. Any of these codes stops a QR alarm.</string>
+    <string name="create_code">Create and print a code</string>
+    <string name="register_barcode">Use a barcode I already have</string>
+    <string name="scan_own_hint">Scan any barcode that stays put, like the one on your shampoo bottle.</string>
+    <string name="code_generated">Printed code</string>
+    <string name="code_registered">Existing barcode</string>
+    <string name="print">Print</string>
+    <string name="code_name_title">Where will it hang?</string>
+    <string name="code_default_name">Bathroom</string>
+    <string name="code_duplicate">This code is already on the list.</string>
+    <string name="last_code_blocked">This is your last code and a QR alarm is on. Switch the alarm to another mode first.</string>
+    <string name="print_instructions">Scan this code to stop your alarm. Keep it far from the bed.</string>
+
+    <string name="onboarding_title">Let\'s make sure it rings.</string>
+    <string name="health_title">Alarm health</string>
+    <string name="health_intro">Phones love to silence apps to save battery. Each orange dot is a way your alarm could stay quiet.</string>
+    <string name="h_notifications">Notifications</string>
+    <string name="h_notifications_text">Without them Android hides the alarm screen.</string>
+    <string name="h_fullscreen">Full-screen alarm</string>
+    <string name="h_fullscreen_text">Lets the alarm take over a locked screen.</string>
+    <string name="h_exact">Exact alarms</string>
+    <string name="h_exact_text">Without it Android may ring minutes late.</string>
+    <string name="h_battery">No battery limits</string>
+    <string name="h_battery_text">Battery saving can kill the alarm before it rings. Pick \"Don\'t optimize\" or \"Unrestricted\".</string>
+    <string name="h_vendor">Phone maker\'s restrictions</string>
+    <string name="h_vendor_text">Many phones add their own switches on top of Android. On the app page allow everything you find: autostart, show on lock screen, pop-up windows in the background, no battery restrictions. The phone cannot tell us, so mark it yourself.</string>
+    <string name="h_vendor_guide">Guide for this phone</string>
+    <string name="h_vendor_done">Done</string>
+    <string name="h_vendor_undo">Not done yet</string>
+    <string name="h_camera">Camera</string>
+    <string name="h_camera_text">For QR codes. Better to allow it now than half asleep.</string>
+    <string name="h_watch_text">The alarm notification has no buttons, so a watch can show it but cannot stop it.</string>
+    <string name="onboarding_done">Done, let me in</string>
+
+    <string name="auto_stop">Stop on its own after</string>
+    <string name="never">Never</string>
+    <string name="auto_stop_hint">So it does not scream all day while you are away. You get a notification when it gives up.</string>
+    <string name="upcoming_notice">Notice two hours before</string>
+    <string name="upcoming_notice_hint">With a button to dismiss early. Stopping early still takes the alarm\'s task.</string>
+    <string name="theme">Theme</string>
+    <string name="theme_dark">Night</string>
+    <string name="theme_light">Day</string>
+    <string name="theme_system">Like the phone</string>
+    <string name="language">Language</string>
+    <string name="language_system">Like the phone</string>
+    <string name="about">About</string>
+    <string name="source_code">Source code on GitHub</string>
+    <string name="about_text">Version %1$s. Free software under the GNU GPL v3. No ads, no tracking, no internet access.\n© 2026 Kirill Semenchenko. Font: Unbounded, SIL Open Font License.</string>
+</resources>
