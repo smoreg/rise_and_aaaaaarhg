@@ -5,13 +5,6 @@ plugins {
     alias(libs.plugins.ksp)
 }
 
-/** Output of a git command, or "" when it fails (no git, no commits yet). */
-fun git(vararg args: String): String = try {
-    val p = ProcessBuilder("git", *args).redirectError(ProcessBuilder.Redirect.DISCARD).start()
-    val out = p.inputStream.bufferedReader().readText().trim()
-    if (p.waitFor() == 0) out else ""
-} catch (_: Exception) { "" }
-
 android {
     namespace = "dev.smoreg.raa"
     compileSdk = 36
@@ -20,8 +13,9 @@ android {
         applicationId = "dev.smoreg.raa"
         minSdk = 26
         targetSdk = 36
-        versionCode = git("rev-list", "--count", "HEAD").toIntOrNull() ?: 1
-        versionName = git("describe", "--tags", "--always").removePrefix("v").ifEmpty { "0.1.0" }
+        // Bump both by hand for every Play upload; versionCode must only ever grow.
+        versionCode = 1
+        versionName = "0.1.0"
     }
 
     // Upload key lives outside the repo; tools/release.sh fills these from the keystore file and Keychain.
@@ -87,7 +81,6 @@ dependencies {
     implementation(libs.androidx.camera.camera2)
     implementation(libs.androidx.camera.lifecycle)
     implementation(libs.androidx.camera.view)
-    implementation(libs.mlkit.barcode)
     implementation(libs.zxing.core)
     implementation(libs.kotlinx.coroutines.android)
     debugImplementation(libs.androidx.ui.tooling)

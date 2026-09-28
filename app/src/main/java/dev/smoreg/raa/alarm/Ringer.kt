@@ -33,7 +33,7 @@ data class RingSession(
     val mutedUntil: Long = 0,
     /** Quiet walks taken so far; each one is shorter than the last. */
     val quietCount: Int = 0,
-    /** In a quiet mode: the task is being worked on right now (spinning, tapping), so stay silent. */
+    /** The task is being worked on right now (shaking, tapping), so stay silent. */
     val engaged: Boolean = false,
     val lostCode: Boolean = false,
     val cameraActive: Boolean = false,
@@ -83,6 +83,8 @@ object Ringer {
 
     /** Leaving the early-dismiss screen without finishing the task keeps the alarm as it was. */
     fun cancelEarly() = state.update { if (it?.phase == Phase.EARLY) null else it }
+
+    fun dropIfNotReal() = state.update { if (it != null && (it.test || it.phase == Phase.EARLY)) null else it }
 
     fun finish(outcome: Outcome) {
         val s = state.getAndUpdate { null } ?: return

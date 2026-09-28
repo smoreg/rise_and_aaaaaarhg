@@ -102,7 +102,7 @@
     <string name="light_sunrise">Amanecer</string>
     <string name="light_strobe">Estroboscopio</string>
     <string name="sunrise_minutes">La luz empieza %1$d min antes del sonido</string>
-    <string name="sunrise_hint">La pantalla y la linterna se encienden despacio, del rojo oscuro al blanco cálido. Deja el teléfono boca arriba.</string>
+    <string name="sunrise_hint">La pantalla pasa despacio del rojo oscuro al blanco cálido; la linterna también se enciende poco a poco si el teléfono lo permite. Deja el teléfono boca arriba.</string>
     <string name="strobe_hint">La linterna y la pantalla parpadean mientras suena. Deja el teléfono boca arriba.</string>
     <string name="strobe_warning_title">Luz intermitente</string>
     <string name="strobe_warning_text">El estroboscopio parpadea dos veces por segundo. No lo uses si tú o alguien en la habitación tiene epilepsia fotosensible.</string>
@@ -140,7 +140,7 @@
     <string name="lost_code">¡Ay no! ¡Perdí mi código!</string>
     <string name="tap_button">TOC</string>
     <string name="tap_hint">Toca con ganas. Tocando despacio nunca llegas.</string>
-    <string name="snooze_button">%1$d min más · %2$s</string>
+    <string name="snooze_button">%1$s más · %2$s</string>
     <plurals name="snooze_left">
         <item quantity="one">queda %d</item>
         <item quantity="many">quedan %d</item>

@@ -25,7 +25,7 @@ import dev.smoreg.raa.ui.settings.SettingsScreen
 import dev.smoreg.raa.ui.theme.RaaTheme
 
 class MainActivity : AppCompatActivity() {
-    /** While an alarm rings the app itself is off limits: no editing, no new codes, no gyroscope "fix". */
+    /** While an alarm rings the app itself is off limits: no editing, no test rings, no new codes. */
     override fun onResume() {
         super.onResume()
         val phase = Ringer.session.value?.phase

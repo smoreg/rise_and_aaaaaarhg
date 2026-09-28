@@ -11,7 +11,6 @@ navigationCompose = "2.9.0"
 room = "2.7.2"
 datastore = "1.1.7"
 camerax = "1.4.2"
-mlkitBarcode = "17.3.0"
 zxing = "3.5.3"
 coroutines = "1.10.2"
 junit = "4.13.2"
@@ -39,7 +38,6 @@ androidx-datastore-preferences = { group = "androidx.datastore", name = "datasto
 androidx-camera-camera2 = { group = "androidx.camera", name = "camera-camera2", version.ref = "camerax" }
 androidx-camera-lifecycle = { group = "androidx.camera", name = "camera-lifecycle", version.ref = "camerax" }
 androidx-camera-view = { group = "androidx.camera", name = "camera-view", version.ref = "camerax" }
-mlkit-barcode = { group = "com.google.mlkit", name = "barcode-scanning", version.ref = "mlkitBarcode" }
 zxing-core = { group = "com.google.zxing", name = "core", version.ref = "zxing" }
 kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }

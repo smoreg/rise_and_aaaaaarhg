@@ -9,7 +9,7 @@ tracking, and it does not request the Internet permission, so it cannot send any
 
 | Permission | Why | What happens to the data |
 |---|---|---|
-| Camera | Scan the QR code or barcode that stops an alarm | Frames are analysed on the device by a bundled barcode model and discarded immediately. Nothing is stored or transmitted. |
+| Camera | Scan the QR code or barcode that stops an alarm | Frames are decoded on the device (ZXing) and discarded immediately. Nothing is stored or transmitted. |
 | Notifications, full-screen intent | Show the ringing alarm over the lock screen | — |
 | Exact alarms, foreground service, wake lock, start at boot | Ring at the right minute, keep ringing, restore alarms after a reboot | — |
 | Vibration, flashlight | Wake you up | — |

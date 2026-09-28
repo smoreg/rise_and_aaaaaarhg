@@ -88,9 +88,10 @@ class RingingActivity : AppCompatActivity() {
         return if (ringing && volumeKey) true else super.onKeyDown(keyCode, event)
     }
 
-    override fun onDestroy() {
-        if (isFinishing) Ringer.cancelEarly()
-        super.onDestroy()
+    /** An early-dismiss screen left in the background would otherwise hold the session for hours. */
+    override fun onStop() {
+        Ringer.cancelEarly()
+        super.onStop()
     }
 
     companion object {

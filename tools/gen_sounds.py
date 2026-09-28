@@ -1,4 +1,4 @@
-"""Synthesizes the bundled alarm loops. Own work, so the app ships no third-party audio.
+"""Synthesizes the klaxon, beeps and dawn loops, so these three need no audio licence.
 
     python3 tools/gen_sounds.py   # writes app/src/main/res/raw/*.ogg (needs ffmpeg)
 """

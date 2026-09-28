@@ -106,7 +106,7 @@
     <string name="light_sunrise">Рассвет</string>
     <string name="light_strobe">Стробоскоп</string>
     <string name="sunrise_minutes">Свет за %1$d мин до звука</string>
-    <string name="sunrise_hint">Экран и фонарик медленно разгораются от тёмно-красного к тёплому белому. Положи телефон экраном вверх.</string>
+    <string name="sunrise_hint">Экран медленно разгорается от тёмно-красного к тёплому белому, фонарик — тоже, если телефон умеет менять его яркость. Положи телефон экраном вверх.</string>
     <string name="strobe_hint">Фонарик и экран мигают, пока звонит. Положи телефон экраном вверх.</string>
     <string name="strobe_warning_title">Мигающий свет</string>
     <string name="strobe_warning_text">Стробоскоп мигает два раза в секунду. Не включай его, если у тебя или у кого-то в комнате светочувствительная эпилепсия.</string>
@@ -145,7 +145,7 @@
     <string name="lost_code">О нет! Я потерял код!</string>
     <string name="tap_button">ТЫК</string>
     <string name="tap_hint">Тыкай яростно. Вяло не дотыкаешь.</string>
-    <string name="snooze_button">Ещё %1$d мин · %2$s</string>
+    <string name="snooze_button">Ещё %1$s · %2$s</string>
     <plurals name="snooze_left">
         <item quantity="one">остался %d раз</item>
         <item quantity="few">осталось %d раза</item>

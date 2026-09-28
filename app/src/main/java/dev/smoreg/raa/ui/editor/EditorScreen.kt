@@ -45,6 +45,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -84,7 +85,10 @@ import dev.smoreg.raa.ui.theme.LocalPalette
 import dev.smoreg.raa.ui.theme.Type
 import dev.smoreg.raa.ui.weekDays
 import java.time.ZonedDateTime
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.io.File
 
 private const val LABEL_MAX = 60
 /** A test compresses the sunrise so the whole thing fits in a few seconds. */
@@ -104,8 +108,10 @@ fun EditorScreen(id: Long, onDone: () -> Unit, onQr: () -> Unit) {
     val edit: ((Alarm) -> Alarm) -> Unit = { f -> draft = f(a) }
 
     fun save() = c.scope.launch {
-        // Editing clears a pending snooze; a skip set in this editor stays.
-        val clean = a.copy(snoozeUntil = 0, snoozeCount = 0, handledUntil = a.handledUntil.takeIf { it > System.currentTimeMillis() } ?: 0)
+        // Editing clears a pending snooze. A skip stays, but moves to the next ring of the edited time.
+        val skipped = a.handledUntil > System.currentTimeMillis()
+        val base = a.copy(snoozeUntil = 0, snoozeCount = 0, handledUntil = 0)
+        val clean = if (skipped) base.copy(handledUntil = nextRingMs(base)) else base
         val rowId = c.db.alarms().upsert(clean)
         c.scheduler.schedule(if (clean.id == 0L) clean.copy(id = rowId) else clean)
     }
@@ -149,6 +155,8 @@ fun EditorScreen(id: Long, onDone: () -> Unit, onQr: () -> Unit) {
         }
     }
 }
+
+private fun nextRingMs(a: Alarm) = NextTrigger.ring(a, ZonedDateTime.now())?.toInstant()?.toEpochMilli() ?: 0
 
 private fun test(context: Context, a: Alarm) {
     val now = System.currentTimeMillis()
@@ -240,10 +248,10 @@ private fun SoundSection(a: Alarm, edit: ((Alarm) -> Alarm) -> Unit) {
     val context = LocalContext.current
     val p = LocalPalette.current
     var dialog by remember { mutableStateOf(false) }
+    val scope = rememberCoroutineScope()
     val pickFile = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri: Uri? ->
         uri ?: return@rememberLauncherForActivityResult
-        runCatching { context.contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION) }
-        edit { it.copy(sound = uri.toString()) }
+        scope.launch { importSound(context, uri)?.let { s -> edit { it.copy(sound = s) } } }
     }
 
     SectionTitle(stringResource(R.string.sound))
@@ -286,6 +294,19 @@ private fun SoundSection(a: Alarm, edit: ((Alarm) -> Alarm) -> Unit) {
             confirmButton = { TextButton(onClick = { dialog = false }) { Text(stringResource(R.string.cancel)) } },
         )
     }
+}
+
+/**
+ * Copies a picked file into the app: a cloud document can be slow or gone at 7 am, and the copy
+ * sits in device-protected storage, so it plays even before the first unlock after a reboot.
+ */
+private suspend fun importSound(context: Context, uri: Uri): String? = withContext(Dispatchers.IO) {
+    runCatching {
+        val dir = File(context.createDeviceProtectedStorageContext().filesDir, "sounds").apply { mkdirs() }
+        val file = File(dir, "${System.currentTimeMillis()}.audio")
+        context.contentResolver.openInputStream(uri)!!.use { input -> file.outputStream().use { input.copyTo(it) } }
+        Uri.fromFile(file).toString()
+    }.getOrNull()
 }
 
 @Composable
@@ -376,8 +397,7 @@ private fun SnoozeSection(a: Alarm, edit: ((Alarm) -> Alarm) -> Unit) {
 private fun SkipSwitch(a: Alarm, edit: ((Alarm) -> Alarm) -> Unit) {
     LabeledSwitch(stringResource(R.string.skip_next), a.handledUntil > System.currentTimeMillis()) { on ->
         edit {
-            val next = if (on) NextTrigger.ring(it.copy(snoozeUntil = 0), ZonedDateTime.now()) else null
-            it.copy(handledUntil = next?.toInstant()?.toEpochMilli() ?: 0)
+            it.copy(handledUntil = if (on) nextRingMs(it.copy(snoozeUntil = 0, handledUntil = 0)) else 0)
         }
     }
 }

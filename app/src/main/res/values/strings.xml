@@ -103,7 +103,7 @@
     <string name="light_sunrise">Sunrise</string>
     <string name="light_strobe">Strobe</string>
     <string name="sunrise_minutes">Light starts %1$d min before the sound</string>
-    <string name="sunrise_hint">The screen and the flashlight brighten slowly, from deep red to warm white. Leave the phone face up.</string>
+    <string name="sunrise_hint">The screen glows slowly from deep red to warm white; the flashlight brightens too where the phone allows it. Leave the phone face up.</string>
     <string name="strobe_hint">Flashlight and screen flash while it rings. Leave the phone face up.</string>
     <string name="strobe_warning_title">Flashing light</string>
     <string name="strobe_warning_text">The strobe flashes twice a second. Do not use it if you or anyone in the room has photosensitive epilepsy.</string>
@@ -140,7 +140,7 @@
     <string name="lost_code">Oh no! I lost my code!</string>
     <string name="tap_button">TAP</string>
     <string name="tap_hint">Tap like you mean it. Slow tapping never gets there.</string>
-    <string name="snooze_button">%1$d more min · %2$s</string>
+    <string name="snooze_button">%1$s more · %2$s</string>
     <plurals name="snooze_left">
         <item quantity="one">%d left</item>
         <item quantity="other">%d left</item>

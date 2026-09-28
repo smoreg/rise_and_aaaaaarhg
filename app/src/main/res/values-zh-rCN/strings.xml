@@ -94,7 +94,7 @@
     <string name="light_sunrise">日出</string>
     <string name="light_strobe">频闪</string>
     <string name="sunrise_minutes">声音响起前 %1$d 分钟开始亮灯</string>
-    <string name="sunrise_hint">屏幕和手电筒慢慢变亮，从暗红到暖白。把手机屏幕朝上放。</string>
+    <string name="sunrise_hint">屏幕从暗红慢慢变成暖白；如果手机支持调节亮度，手电筒也会逐渐变亮。把手机屏幕朝上放。</string>
     <string name="strobe_hint">响铃时手电筒和屏幕会闪烁。把手机屏幕朝上放。</string>
     <string name="strobe_warning_title">闪烁的灯光</string>
     <string name="strobe_warning_text">频闪每秒闪两次。如果你或房间里的人有光敏性癫痫，请不要使用。</string>
@@ -130,7 +130,7 @@
     <string name="lost_code">糟了！我的二维码丢了！</string>
     <string name="tap_button">点</string>
     <string name="tap_hint">使劲点。慢慢点永远点不完。</string>
-    <string name="snooze_button">再睡 %1$d 分钟 · %2$s</string>
+    <string name="snooze_button">再睡 %1$s · %2$s</string>
     <plurals name="snooze_left">
         <item quantity="other">还剩 %d 次</item>
     </plurals>

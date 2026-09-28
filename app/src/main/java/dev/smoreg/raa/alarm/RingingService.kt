@@ -70,11 +70,14 @@ class RingingService : LifecycleService() {
 
     private suspend fun onTrigger(id: Long, ringAt: Long, sunrise: Boolean) {
         val c = RaaApp.container
+        // A test ring or an early-dismiss screen is not a real alarm: a real trigger replaces it.
+        Ringer.dropIfNotReal()
         val current = Ringer.session.value
         if (current != null) {
             when {
-                current.alarm.id != id -> Ringer.deferBusy(id)
-                !sunrise -> Ringer.startRinging()
+                current.alarm.id == id -> if (!sunrise) Ringer.startRinging()
+                // Another alarm's light may start later; only its sound is worth retrying.
+                !sunrise -> Ringer.deferBusy(id)
             }
             return
         }

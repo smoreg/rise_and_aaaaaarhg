@@ -170,7 +170,11 @@ fun RingingScreen(s: RingSession) {
                 TextButton(onClick = { Ringer.finish(Outcome.SNOOZED) }, Modifier.align(Alignment.CenterHorizontally).padding(top = 8.dp)) {
                     val left = s.alarm.snoozeMax - s.alarm.snoozeCount
                     Text(
-                        stringResource(R.string.snooze_button, s.alarm.snoozeMinutes, pluralStringResource(R.plurals.snooze_left, left, left)),
+                        stringResource(
+                            R.string.snooze_button,
+                            pluralStringResource(R.plurals.minutes, s.alarm.snoozeMinutes, s.alarm.snoozeMinutes),
+                            pluralStringResource(R.plurals.snooze_left, left, left),
+                        ),
                         color = text.copy(alpha = 0.85f),
                     )
                 }

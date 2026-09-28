@@ -6,10 +6,10 @@ permissions change.
 ## Build
 
 ```sh
-tools/release.sh   # tests, lint, signed AAB → app/build/outputs/bundle/release/app-release.aab
+RAA_STORE_FILE=/path/to/upload.jks tools/release.sh   # tests, lint, signed AAB
 ```
 
-Upload key: `~/s1/raa-upload.jks` (alias `upload`), password in Keychain as `raa-upload-key`.
+Upload key: a PKCS12 keystore with alias `upload`; where it lives is kept outside this repo.
 Enrol in **Play App Signing**; Google keeps the app signing key, we keep only the upload key.
 Back the keystore up somewhere other than this laptop: a lost upload key can be reset through
 Play support, but it takes days.
@@ -17,7 +17,8 @@ Play support, but it takes days.
 ## Store listing
 
 Texts: `fastlane/metadata/android/<locale>/` (en-US default, ru-RU, es-ES, es-419, zh-CN).
-Still needed by hand: 512×512 icon, 1024×500 feature graphic, at least 2 phone screenshots.
+Images: `fastlane/metadata/android/en-US/images/` — `icon.png` 512×512, `featureGraphic.png`
+1024×500 (both from `tools/gen_store_art.py`), `phoneScreenshots/`.
 
 - Category: Tools. Tags: alarm clock.
 - Contact email: the developer account email. Website: https://github.com/smoreg/rise_and_aaaaaarhg
@@ -26,9 +27,8 @@ Still needed by hand: 512×512 icon, 1024×500 feature graphic, at least 2 phone
 ## App content
 
 - **Ads:** no ads.
-- **Data safety:** no data collected, no data shared. The app has no Internet permission
-  (ML Kit's telemetry permissions are removed in the manifest). Camera frames are processed on
-  the device only.
+- **Data safety:** no data collected, no data shared. The app has no Internet permission and no
+  proprietary SDKs; barcodes are decoded on the device by ZXing and frames are discarded.
 - **Content rating:** no violence, no user content, no sharing. The strobe light is the only
   sensitive feature; it is opt-in and shows a photosensitivity warning.
 - **Target audience:** 13+ (not designed for children).
@@ -45,14 +45,11 @@ Still needed by hand: 512×512 icon, 1024×500 feature graphic, at least 2 phone
 
 ## Before each release
 
-- Bump nothing by hand: versionCode is the git commit count, versionName the latest `v*` tag.
-- `git tag vX.Y.Z` before running `tools/release.sh`.
+- Raise `versionCode` and `versionName` in `app/build.gradle.kts`; Play rejects a code it has seen.
+- Tag the commit `vX.Y.Z`.
 - Add `fastlane/metadata/android/<locale>/changelogs/<versionCode>.txt` for every locale.
 
 ## Assets and licences
 
-- Code: GNU GPL v3 (`LICENSE`).
-- Font: Unbounded, SIL Open Font License (`OFL-Unbounded.txt`).
-- Sounds: `klaxon`, `beeps`, `dawn` are synthesised by `tools/gen_sounds.py`.
-  `rise_and_shine` is an original track by the author made with Suno; commercial use requires that
-  it was generated on a paid Suno plan.
+See [NOTICE.md](../NOTICE.md): code GPL-3.0, font OFL, sounds synthesised or made by the author
+(Suno, paid plan).

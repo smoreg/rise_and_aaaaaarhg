@@ -8,14 +8,14 @@ RiseAndAaaaaaagh! stops only when you actually do something:
 
 Waking up
 • Sound that grows from a whisper, at the volume you pick.
-• Sunrise light: the screen and flashlight glow from deep red to warm white before the sound starts.
+• Sunrise light: before the sound starts, the screen glows from deep red to warm white and the flashlight brightens where the phone supports it.
 • Strobe, with a photosensitivity warning.
 • Your own music file, the phone's alarm sound, or the bundled sounds.
 
 Hard to escape
 • The notification has no buttons, so a smartwatch can show the alarm but cannot stop it.
 • Volume keys and Back do nothing while it rings.
-• A reboot or a killed app resumes the ring.
+• If the phone reboots or the app crashes mid-ring, the ring comes back.
 • Lost your code? A last-resort shake appears after the third quiet walk.
 • Auto-stop after 15, 30 or 60 minutes, so it does not scream all day while you are away.
 
