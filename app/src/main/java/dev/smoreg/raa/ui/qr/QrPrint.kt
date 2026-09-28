@@ -1,6 +1,7 @@
 package dev.smoreg.raa.ui.qr
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Paint
@@ -8,6 +9,7 @@ import android.graphics.Typeface
 import android.text.Layout
 import android.text.StaticLayout
 import android.text.TextPaint
+import androidx.core.content.FileProvider
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.createBitmap
 import androidx.core.graphics.withTranslation
@@ -20,8 +22,24 @@ import dev.smoreg.raa.R
 import dev.smoreg.raa.data.QrCode
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.io.File
 
 /** A4 page at 200 dpi: the code as large as a sheet allows, its name, and one line of instructions. */
+/** Sends the same page as a PNG through the share sheet: to a laptop, a tablet, a chat with yourself. */
+suspend fun shareCode(context: Context, code: QrCode) {
+    val file = withContext(Dispatchers.IO) {
+        val dir = File(context.cacheDir, "codes").apply { mkdirs() }
+        File(dir, "code-${code.id}.png").also { f -> f.outputStream().use { render(context, code).compress(Bitmap.CompressFormat.PNG, 100, it) } }
+    }
+    val uri = FileProvider.getUriForFile(context, "${context.packageName}.files", file)
+    val send = Intent(Intent.ACTION_SEND)
+        .setType("image/png")
+        .putExtra(Intent.EXTRA_STREAM, uri)
+        .putExtra(Intent.EXTRA_TITLE, code.name)
+        .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+    context.startActivity(Intent.createChooser(send, context.getString(R.string.share_code)))
+}
+
 suspend fun printCode(context: Context, code: QrCode) {
     val page = withContext(Dispatchers.Default) { render(context, code) }
     PrintHelper(context).apply { scaleMode = PrintHelper.SCALE_MODE_FIT }

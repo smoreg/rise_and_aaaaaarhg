@@ -117,6 +117,7 @@ fun QrScreen(onBack: () -> Unit) {
                     Row(Modifier.padding(top = 8.dp)) {
                         if (code.generated) {
                             TextButton(onClick = { scope.launch { printCode(context, code) } }) { Text(stringResource(R.string.print)) }
+                            TextButton(onClick = { scope.launch { shareCode(context, code) } }) { Text(stringResource(R.string.share_code)) }
                         }
                         TextButton(onClick = {
                             scope.launch {
@@ -138,27 +139,58 @@ fun QrScreen(onBack: () -> Unit) {
         }
     }
 
-    naming?.let { n ->
-        NameDialog(
+    when (val n = naming) {
+        Naming.Generated -> CreateCodeFlow(onDismiss = { naming = null })
+        is Naming.Scanned -> NameDialog(
             onDismiss = { naming = null },
             onSave = { name ->
                 naming = null
-                scope.launch {
-                    val code = when (n) {
-                        Naming.Generated -> QrCode(name = name, payload = QrCode.newPayload(), generated = true)
-                        is Naming.Scanned -> QrCode(name = name, payload = n.payload, generated = false)
-                    }
-                    c.db.qrCodes().insert(code)
-                    if (code.generated) printCode(context, code)
-                }
+                scope.launch { c.db.qrCodes().insert(QrCode(name = name, payload = n.payload, generated = false)) }
             },
         )
+        null -> Unit
     }
     message?.let { m ->
         AlertDialog(
             onDismissRequest = { message = null },
             text = { Text(stringResource(m)) },
             confirmButton = { TextButton(onClick = { message = null }) { Text(stringResource(R.string.ok)) } },
+        )
+    }
+}
+
+/**
+ * Name a new code, then choose how to put it up: print it, or share the image to open on another
+ * screen. [onCreated] gets the saved code; dismissing at any step creates nothing.
+ */
+@Composable
+fun CreateCodeFlow(onDismiss: () -> Unit, onCreated: (QrCode) -> Unit = {}) {
+    val c = RaaApp.container
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    var created by remember { mutableStateOf<QrCode?>(null) }
+    val code = created
+    if (code == null) {
+        NameDialog(onDismiss = onDismiss, onSave = { name ->
+            scope.launch {
+                val fresh = QrCode(name = name, payload = QrCode.newPayload(), generated = true)
+                val saved = fresh.copy(id = c.db.qrCodes().insert(fresh))
+                created = saved
+                onCreated(saved)
+            }
+        })
+    } else {
+        AlertDialog(
+            onDismissRequest = onDismiss,
+            title = { Text(stringResource(R.string.code_put_up_title)) },
+            text = { Text(stringResource(R.string.code_put_up_text)) },
+            confirmButton = {
+                // Dismiss only after the page is out: closing first would cancel the render with this dialog.
+                TextButton(onClick = { scope.launch { printCode(context, code); onDismiss() } }) { Text(stringResource(R.string.print)) }
+            },
+            dismissButton = {
+                TextButton(onClick = { scope.launch { shareCode(context, code); onDismiss() } }) { Text(stringResource(R.string.share_code)) }
+            },
         )
     }
 }

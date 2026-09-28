@@ -92,11 +92,7 @@ private fun App(settings: AppSettings) {
             )
         }
         composable("edit/{id}", arguments = listOf(navArgument("id") { type = NavType.LongType })) {
-            EditorScreen(
-                id = it.arguments?.getLong("id") ?: 0,
-                onDone = { nav.popBackStack() },
-                onQr = { nav.navigate("qr") },
-            )
+            EditorScreen(id = it.arguments?.getLong("id") ?: 0, onDone = { nav.popBackStack() })
         }
         composable("qr") { QrScreen(onBack = { nav.popBackStack() }) }
         composable("settings") {

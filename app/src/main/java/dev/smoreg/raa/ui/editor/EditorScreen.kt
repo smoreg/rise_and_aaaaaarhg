@@ -79,6 +79,7 @@ import dev.smoreg.raa.ui.Stepper
 import dev.smoreg.raa.ui.TopBar
 import dev.smoreg.raa.ui.card
 import dev.smoreg.raa.ui.dayShort
+import dev.smoreg.raa.ui.qr.CreateCodeFlow
 import dev.smoreg.raa.ui.shakeLevelName
 import dev.smoreg.raa.ui.ringing.RingingActivity
 import dev.smoreg.raa.ui.theme.LocalPalette
@@ -96,7 +97,7 @@ private const val TEST_SUNRISE_MS = 10_000L
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EditorScreen(id: Long, onDone: () -> Unit, onQr: () -> Unit) {
+fun EditorScreen(id: Long, onDone: () -> Unit) {
     val c = RaaApp.container
     val context = LocalContext.current
     var draft by remember { mutableStateOf<Alarm?>(null) }
@@ -139,7 +140,7 @@ fun EditorScreen(id: Long, onDone: () -> Unit, onQr: () -> Unit) {
                 label = { Text(stringResource(R.string.label)) },
                 singleLine = true,
             )
-            DismissSection(a, edit, onQr)
+            DismissSection(a, edit)
             SoundSection(a, edit)
             LightSection(a, edit)
             SnoozeSection(a, edit)
@@ -213,9 +214,10 @@ private fun DaysSection(a: Alarm, edit: ((Alarm) -> Alarm) -> Unit) {
 }
 
 @Composable
-private fun DismissSection(a: Alarm, edit: ((Alarm) -> Alarm) -> Unit, onQr: () -> Unit) {
+private fun DismissSection(a: Alarm, edit: ((Alarm) -> Alarm) -> Unit) {
     val p = LocalPalette.current
     val codes by remember { RaaApp.container.db.qrCodes().observeAll() }.collectAsStateWithLifecycle(initialValue = null)
+    var creating by remember { mutableStateOf(false) }
     SectionTitle(stringResource(R.string.how_to_stop))
     val modes = listOf(
         DismissMode.BUTTON to (R.string.mode_button to stringResource(R.string.mode_button_desc)),
@@ -238,9 +240,10 @@ private fun DismissSection(a: Alarm, edit: ((Alarm) -> Alarm) -> Unit, onQr: () 
     if (a.dismissMode == DismissMode.QR && codes?.isEmpty() == true) {
         Column(Modifier.fillMaxWidth().padding(top = 8.dp).border(2.dp, p.dawn, RoundedCornerShape(16.dp)).card()) {
             Text(stringResource(R.string.no_codes_warning), color = p.ink)
-            TextButton(onClick = onQr, Modifier.padding(top = 4.dp)) { Text(stringResource(R.string.go_make_code)) }
+            TextButton(onClick = { creating = true }, Modifier.padding(top = 4.dp)) { Text(stringResource(R.string.go_make_code)) }
         }
     }
+    if (creating) CreateCodeFlow(onDismiss = { creating = false })
 }
 
 @Composable

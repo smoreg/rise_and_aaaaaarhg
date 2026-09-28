@@ -46,6 +46,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.smoreg.raa.R
 import dev.smoreg.raa.RaaApp
 import dev.smoreg.raa.alarm.Outcome
@@ -286,7 +287,8 @@ private fun QrTask(s: RingSession, now: Long, text: Color, onDone: () -> Unit) {
             }
         }
 
-        if (s.quietCount >= LOST_CODE_AFTER_QUIET_WALKS) {
+        val codes by remember { c.db.qrCodes().observeAll() }.collectAsStateWithLifecycle(initialValue = null)
+        if (s.quietCount >= LOST_CODE_AFTER_QUIET_WALKS || codes?.isEmpty() == true) {
             TextButton(onClick = { Ringer.loseCode() }, Modifier.padding(top = 4.dp)) {
                 Text(stringResource(R.string.lost_code), color = text.copy(alpha = 0.7f), style = MaterialTheme.typography.bodySmall)
             }

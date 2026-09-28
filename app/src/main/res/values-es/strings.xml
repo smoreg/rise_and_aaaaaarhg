@@ -67,7 +67,7 @@
     <string name="mode_button">Normal</string>
     <string name="mode_button_desc">Desliza hasta el final. Un toque no basta.</string>
     <string name="mode_qr">Código QR</string>
-    <string name="mode_qr_desc">Escanea tu código impreso en otra habitación. El botón te da silencio para llegar: %1$d min, luego un minuto menos cada vez, hasta uno. Si no llegas, vuelve a gritar.</string>
+    <string name="mode_qr_desc">Escanea tu código en otra habitación, en papel o en una pantalla. El botón te da silencio para llegar: %1$d min, luego un minuto menos cada vez, hasta uno. Si no llegas, vuelve a gritar.</string>
     <string name="mode_shake">Agitar</string>
     <string name="mode_shake_desc">Calla mientras agitas y vuelve a gritar en cuanto paras. Cuanto más fuerte agitas, más rápido se llena.</string>
     <string name="shake_level">Cuánto agitar</string>
@@ -78,7 +78,7 @@
     <string name="shake_hint">Agita fuerte. Más fuerte, más rápido. Si paras, grita.</string>
     <string name="notif_stop_shake">Solo se apaga agitando el teléfono</string>
     <string name="quiet_minutes">Silencio para llegar al código: %1$d min</string>
-    <string name="no_codes_warning">Todavía no tienes códigos. Crea e imprime uno primero, o esta alarma solo se apagará con el plan B de código perdido.</string>
+    <string name="no_codes_warning">Todavía no tienes códigos. Crea uno: imprímelo o ábrelo en otra pantalla. Sin código esta alarma solo se apaga con el plan B de código perdido.</string>
     <string name="go_make_code">Crear un código</string>
 
     <string name="sound">Sonido</string>
@@ -149,12 +149,15 @@
     </plurals>
 
     <string name="qr_intro_title">Pon un código donde tengas que caminar.</string>
-    <string name="qr_intro">Imprime un código y pégalo en otra habitación: el baño, la cocina. Cualquiera de estos códigos apaga una alarma QR.</string>
-    <string name="create_code">Crear e imprimir un código</string>
+    <string name="qr_intro">Pon un código en otra habitación: imprímelo y pégalo, o abre la imagen en un portátil o una tablet. Cualquiera de estos códigos apaga una alarma QR.</string>
+    <string name="create_code">Crear un código</string>
     <string name="register_barcode">Usar un código de barras que ya tengo</string>
     <string name="scan_own_hint">Escanea cualquier código de barras que no se mueva, como el de tu botella de champú.</string>
-    <string name="code_generated">Código impreso</string>
+    <string name="code_generated">Código de la app</string>
     <string name="code_registered">Código de barras propio</string>
+    <string name="share_code">Compartir</string>
+    <string name="code_put_up_title">¿Cómo lo vas a poner?</string>
+    <string name="code_put_up_text">Imprímelo o envía la imagen a un portátil o una tablet y déjala abierta en otra habitación.</string>
     <string name="print">Imprimir</string>
     <string name="code_name_title">¿Dónde lo vas a colgar?</string>
     <string name="code_default_name">Baño</string>

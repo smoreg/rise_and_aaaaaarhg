@@ -59,7 +59,7 @@
     <string name="mode_button">普通</string>
     <string name="mode_button_desc">一直滑到底。点一下不算。</string>
     <string name="mode_qr">二维码</string>
-    <string name="mode_qr_desc">扫描贴在另一个房间的二维码。按钮给你安静时间走过去：先 %1$d 分钟，之后每次少一分钟，最少一分钟。没赶上，它会再次尖叫。</string>
+    <string name="mode_qr_desc">扫描放在另一个房间的二维码，纸上或屏幕上都行。按钮给你安静时间走过去：先 %1$d 分钟，之后每次少一分钟，最少一分钟。没赶上，它会再次尖叫。</string>
     <string name="mode_shake">摇晃</string>
     <string name="mode_shake_desc">你摇的时候它安静，一停下又开始尖叫。摇得越用力，进度涨得越快。</string>
     <string name="shake_level">要摇多少</string>
@@ -70,7 +70,7 @@
     <string name="shake_hint">用力摇。越用力越快。一停下就会尖叫。</string>
     <string name="notif_stop_shake">只能摇晃手机关闭</string>
     <string name="quiet_minutes">走到二维码的安静时间：%1$d 分钟</string>
-    <string name="no_codes_warning">你还没有二维码。先生成并打印一个，否则这个闹钟只能用“丢了二维码”的备用方式关闭。</string>
+    <string name="no_codes_warning">你还没有二维码。生成一个——打印出来或在另一块屏幕上打开。没有二维码，这个闹钟只能用“丢了二维码”的备用方式关闭。</string>
     <string name="go_make_code">生成二维码</string>
 
     <string name="sound">声音</string>
@@ -137,12 +137,15 @@
     </plurals>
 
     <string name="qr_intro_title">把二维码放在必须走过去的地方。</string>
-    <string name="qr_intro">打印一个二维码，贴在另一个房间：浴室、厨房。任何一个二维码都能关掉二维码闹钟。</string>
-    <string name="create_code">生成并打印二维码</string>
+    <string name="qr_intro">把二维码放在另一个房间：打印出来贴上，或者在笔记本电脑、平板上打开图片。任何一个二维码都能关掉二维码闹钟。</string>
+    <string name="create_code">生成二维码</string>
     <string name="register_barcode">用我已有的条形码</string>
     <string name="scan_own_hint">扫描任何不会移动的条形码，比如洗发水瓶上的。</string>
-    <string name="code_generated">打印的二维码</string>
+    <string name="code_generated">应用生成的码</string>
     <string name="code_registered">已有的条形码</string>
+    <string name="share_code">分享</string>
+    <string name="code_put_up_title">打算怎么放？</string>
+    <string name="code_put_up_text">打印出来，或者把图片发到笔记本电脑或平板上，在另一个房间里打开着。</string>
     <string name="print">打印</string>
     <string name="code_name_title">要挂在哪里？</string>
     <string name="code_default_name">浴室</string>

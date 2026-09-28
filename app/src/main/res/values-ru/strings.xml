@@ -71,7 +71,7 @@
     <string name="mode_button">Обычный</string>
     <string name="mode_button_desc">Протащить слайдер до конца. Тапа мало.</string>
     <string name="mode_qr">QR-код</string>
-    <string name="mode_qr_desc">Отсканируй распечатанный код в другой комнате. Кнопка даёт тишину, чтобы дойти: сначала %1$d мин, потом каждый раз на минуту меньше, до одной. Не успел — снова орёт.</string>
+    <string name="mode_qr_desc">Отсканируй свой код в другой комнате — на бумаге или на экране. Кнопка даёт тишину, чтобы дойти: сначала %1$d мин, потом каждый раз на минуту меньше, до одной. Не успел — снова орёт.</string>
     <string name="mode_shake">Тряска</string>
     <string name="mode_shake_desc">Пока трясёшь — молчит, остановился — снова орёт. Чем сильнее трясёшь, тем быстрее копится.</string>
     <string name="shake_level">Сколько трясти</string>
@@ -82,7 +82,7 @@
     <string name="shake_hint">Тряси сильно. Сильнее — быстрее. Остановишься — заорёт.</string>
     <string name="notif_stop_shake">Выключается только тряской телефона</string>
     <string name="quiet_minutes">Тишина, чтобы дойти: %1$d мин</string>
-    <string name="no_codes_warning">Кодов пока нет. Сначала создай и распечатай код, иначе выключить можно будет только через «потерял код».</string>
+    <string name="no_codes_warning">Кодов пока нет. Сделай код — распечатай или открой на другом экране. Без кода такой будильник выключится только через «потерял код».</string>
     <string name="go_make_code">Сделать код</string>
 
     <string name="sound">Звук</string>
@@ -155,12 +155,15 @@
     </plurals>
 
     <string name="qr_intro_title">Повесь код туда, куда придётся дойти.</string>
-    <string name="qr_intro">Распечатай код и повесь в другой комнате: в ванной, на кухне. Любой из этих кодов выключает QR-будильник.</string>
-    <string name="create_code">Создать и распечатать код</string>
+    <string name="qr_intro">Повесь код в другой комнате: распечатай и приклей или открой картинку на ноутбуке или планшете. Любой из этих кодов выключает QR-будильник.</string>
+    <string name="create_code">Создать код</string>
     <string name="register_barcode">Взять штрихкод, который уже есть</string>
     <string name="scan_own_hint">Отсканируй любой штрихкод, который никуда не денется, например на бутылке шампуня.</string>
-    <string name="code_generated">Распечатанный код</string>
+    <string name="code_generated">Код из приложения</string>
     <string name="code_registered">Свой штрихкод</string>
+    <string name="share_code">Поделиться</string>
+    <string name="code_put_up_title">Как повесишь?</string>
+    <string name="code_put_up_text">Распечатай или отправь картинку на ноутбук или планшет и оставь открытой в другой комнате.</string>
     <string name="print">Печать</string>
     <string name="code_name_title">Где он будет висеть?</string>
     <string name="code_default_name">Ванная</string>

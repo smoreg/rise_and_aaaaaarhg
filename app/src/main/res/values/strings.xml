@@ -67,7 +67,7 @@
     <string name="mode_button">Regular</string>
     <string name="mode_button_desc">Slide all the way. A tap is not enough.</string>
     <string name="mode_qr">QR code</string>
-    <string name="mode_qr_desc">Scan your printed code in another room. The button buys silence to walk there: %1$d min, then a minute less each time, down to one. Miss it and it screams again.</string>
+    <string name="mode_qr_desc">Scan your code in another room, on paper or on a screen. The button buys silence to walk there: %1$d min, then a minute less each time, down to one. Miss it and it screams again.</string>
     <string name="mode_shake">Shake</string>
     <string name="mode_shake_desc">Silent while you shake, screams again the moment you stop. The harder you shake, the faster it fills.</string>
     <string name="shake_level">How much shaking</string>
@@ -78,7 +78,7 @@
     <string name="shake_hint">Shake hard. Harder fills faster. Stop and it screams.</string>
     <string name="notif_stop_shake">Stops only when you shake the phone</string>
     <string name="quiet_minutes">Silence to reach the code: %1$d min</string>
-    <string name="no_codes_warning">You have no codes yet. Make and print one first, or this alarm can only be stopped with the lost-code fallback.</string>
+    <string name="no_codes_warning">You have no codes yet. Make one — print it or open it on another screen. Without a code this alarm can only be stopped with the lost-code fallback.</string>
     <string name="go_make_code">Make a code</string>
 
     <string name="sound">Sound</string>
@@ -148,12 +148,15 @@
     </plurals>
 
     <string name="qr_intro_title">Put a code where you have to walk.</string>
-    <string name="qr_intro">Print a code and stick it up in another room: the bathroom, the kitchen. Any of these codes stops a QR alarm.</string>
-    <string name="create_code">Create and print a code</string>
+    <string name="qr_intro">Put a code in another room: print it and stick it up, or open the picture on a laptop or tablet. Any of these codes stops a QR alarm.</string>
+    <string name="create_code">Create a code</string>
     <string name="register_barcode">Use a barcode I already have</string>
     <string name="scan_own_hint">Scan any barcode that stays put, like the one on your shampoo bottle.</string>
-    <string name="code_generated">Printed code</string>
+    <string name="code_generated">Code from the app</string>
     <string name="code_registered">Existing barcode</string>
+    <string name="share_code">Share</string>
+    <string name="code_put_up_title">How will you put it up?</string>
+    <string name="code_put_up_text">Print it, or send the picture to a laptop or tablet and leave it open in another room.</string>
     <string name="print">Print</string>
     <string name="code_name_title">Where will it hang?</string>
     <string name="code_default_name">Bathroom</string>
