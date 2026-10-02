@@ -115,6 +115,30 @@ and the notification `ringing` exists without action buttons (`dumpsys notificat
 | G5 | Android 16 image (targetSdk 36) | Back gesture during ring does nothing (predictive back); everything in B and C. |
 | G6 | Camera revoked mid-QR ring (`pm revoke`) | Ringing screen shows "Allow camera", alarm keeps ringing; lost-code path still works. |
 
+## R. Radio alarm
+
+Pre-check fires at ring − 2 min (`dumpsys alarm | grep RADIO_CHECK`). "Radio rings" means: `ringing.sh`
+shows `alarm_audio=1` and the station is heard; "melody rings" means the alarm's own sound is heard.
+
+| Id | Case | Expected |
+|---|---|---|
+| R1 | Radio alarm, working station, screen locked *(emu)* | At ring − 2 min a minimal "Checking the radio" notification appears and nothing is heard. At ring time the station rings with the volume ramp. |
+| R2 | Airplane mode before the pre-check *(emu)* | Melody rings at ring time. |
+| R3 | Broken stream address (`http://127.0.0.1:9/x`) | Melody rings. Pre-check notification gone before the ring. |
+| R4 | Network cut after a good pre-check, before the ring | Melody rings (stream stalled ≥ 5 s → failed). |
+| R5 | Network cut while the radio rings | Melody takes over within ~5 s and stays until dismiss, no switch back. |
+| R6 | Alarm set 20 s ahead | No pre-check scheduled; melody rings. |
+| R7 | Alarm set 1 min ahead | Pre-check runs at once; radio rings if the station reached 20 s of steady play. |
+| R8 | Doze: `dumpsys deviceidle force-idle` before the pre-check *(emu)* | Same as R1. |
+| R9 | Kill the process after the pre-check (`am kill dev.smoreg.raa`) | Alarm rings at its time with the melody. |
+| R10 | Quiet walk (QR mode) during a radio ring | Radio muted, not stopped; heard again when the walk is over. |
+| R11 | Snooze a radio ring | Next ring gets its own pre-check (snooze ≥ 1 min). |
+| R12 | Test button, radio alarm | Silence up to 15 s while connecting, then the station; a dead address gives the melody. |
+| R13 | Station search: "jazz"; offline search | List with country, codec, bitrate; offline shows "Search failed". |
+| R14 | Turn radio on with sound "No sound" | Sound switches to the default melody; "No sound" is not offered while radio is on. |
+| R15 | Upgrade from the previous version with alarms set | Alarms keep ringing (DB 2→3, same PendingIntent codes); radio off on all of them. |
+| R16 | HLS (`.m3u8`) and plain http station | Both play (cleartext allowed). |
+
 ## H. Localization
 
 | Id | Case | Expected |

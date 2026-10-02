@@ -11,6 +11,7 @@ Despertar
 • Luz de amanecer: antes del sonido, la pantalla pasa del rojo oscuro al blanco cálido y la linterna se enciende poco a poco si el teléfono lo permite.
 • Estroboscopio, con aviso de fotosensibilidad.
 • Tu propio archivo de música, el sonido de alarma del teléfono o los sonidos incluidos.
+• Radio por internet: dos minutos antes de la alarma la emisora arranca en silencio para comprobar que suena. Si no responde o se corta, suena la melodía.
 
 Difícil de escapar
 • La notificación no tiene botones: un reloj inteligente la muestra pero no puede apagarla.
@@ -22,5 +23,5 @@ Difícil de escapar
 Salud de la alarma
 Una lista de los ajustes con los que los teléfonos silencian apps — notificaciones, alarma a pantalla completa, alarmas exactas, límites de batería — con un botón para arreglar cada uno.
 
-Software libre bajo la GNU GPL v3. Sin anuncios, sin rastreo, sin cuentas y sin permiso de internet.
+Software libre bajo la GNU GPL v3. Sin anuncios, sin rastreo, sin cuentas. Internet se usa solo para la emisora que elijas.
 Código fuente: https://github.com/smoreg/rise_and_aaaaaarhg

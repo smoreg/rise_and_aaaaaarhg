@@ -2,7 +2,7 @@
 
 Android alarm clock that stops only when you do something: scan a printed QR code in another room,
 shake the phone, or slide all the way. Sunrise light, strobe, volume ramp. No ads, no tracking,
-no internet permission.
+internet only for the radio station you pick.
 
 ## Build
 
@@ -28,8 +28,12 @@ Release: `RAA_STORE_FILE=/path/to/upload.jks tools/release.sh` builds the signed
 `RingingActivity` shows the task. The notification has no actions, so a smartwatch cannot stop it.
 A ring interrupted by a reboot or a killed process resumes (`RingRecord` + watchdog alarm).
 
+A radio alarm also sets a `RADIO_CHECK` two minutes earlier: `RadioService` keeps `RadioTuner` playing
+the stream muted, and at ring time `SoundPlayer` uses it only after 20 s without a stall. Otherwise,
+or if it stalls for 5 s while ringing, the alarm's melody plays for the rest of the ring.
+
 ## License
 
 Copyright (C) 2026 Kirill Semenchenko. Free software under the GNU GPL v3 or later, see
 [LICENSE](LICENSE). Bundled sounds, the font and libraries are listed in [NOTICE.md](NOTICE.md).
-Privacy: [PRIVACY.md](PRIVACY.md) — the app collects nothing and has no internet access.
+Privacy: [PRIVACY.md](PRIVACY.md) — the app collects nothing; the network is used only for the radio alarm.

@@ -11,6 +11,7 @@ Waking up
 • Sunrise light: before the sound starts, the screen glows from deep red to warm white and the flashlight brightens where the phone supports it.
 • Strobe, with a photosensitivity warning.
 • Your own music file, the phone's alarm sound, or the bundled sounds.
+• Internet radio: two minutes before the alarm the station starts silently to check that it plays. If it does not answer or stutters, the melody plays instead.
 
 Hard to escape
 • The notification has no buttons, so a smartwatch can show the alarm but cannot stop it.
@@ -22,5 +23,5 @@ Hard to escape
 Alarm health
 A checklist of the settings phones use to silence apps — notifications, full-screen alarms, exact alarms, battery limits — with a button to fix each.
 
-Free software under the GNU GPL v3. No ads, no tracking, no accounts, and no internet permission at all.
+Free software under the GNU GPL v3. No ads, no tracking, no accounts. The internet is used only for the radio station you pick.
 Source code: https://github.com/smoreg/rise_and_aaaaaarhg

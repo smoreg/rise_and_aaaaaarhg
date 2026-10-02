@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
@@ -25,6 +26,8 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
@@ -54,6 +57,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.smoreg.raa.R
@@ -68,6 +73,8 @@ import dev.smoreg.raa.data.DismissMode
 import dev.smoreg.raa.data.LightMode
 import dev.smoreg.raa.data.ShakeLevel
 import dev.smoreg.raa.data.Sound
+import dev.smoreg.raa.data.Station
+import dev.smoreg.raa.data.Stations
 import dev.smoreg.raa.data.dayBit
 import dev.smoreg.raa.ui.Choice
 import dev.smoreg.raa.ui.Hint
@@ -172,6 +179,7 @@ private fun test(context: Context, a: Alarm) {
         ),
     )
     if (!started) return
+    if (a.usesRadio) RaaApp.container.radio.warmUp(a.id, a.radioUrl)
     RingingService.show(context)
     context.startActivity(Intent(context, RingingActivity::class.java))
 }
@@ -251,6 +259,7 @@ private fun SoundSection(a: Alarm, edit: ((Alarm) -> Alarm) -> Unit) {
     val context = LocalContext.current
     val p = LocalPalette.current
     var dialog by remember { mutableStateOf(false) }
+    var stations by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
     val pickFile = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri: Uri? ->
         uri ?: return@rememberLauncherForActivityResult
@@ -258,6 +267,18 @@ private fun SoundSection(a: Alarm, edit: ((Alarm) -> Alarm) -> Unit) {
     }
 
     SectionTitle(stringResource(R.string.sound))
+    LabeledSwitch(stringResource(R.string.radio_switch), a.radio) { on ->
+        // The melody is what plays when the stream does not, so it cannot be silence.
+        edit { it.copy(radio = on, sound = if (on && it.sound == Sound.SILENT) Sound.DEFAULT else it.sound) }
+    }
+    if (a.radio) {
+        Row(Modifier.fillMaxWidth().padding(top = 8.dp).clickable { stations = true }.card(), verticalAlignment = Alignment.CenterVertically) {
+            Text(a.radioName.ifBlank { stringResource(R.string.radio_pick) }, Modifier.weight(1f), style = Type.title, color = p.ink)
+            Text(stringResource(R.string.change), color = p.dawn)
+        }
+        Hint(stringResource(R.string.radio_hint), Modifier.padding(top = 8.dp))
+        Hint(stringResource(R.string.radio_fallback), Modifier.padding(top = 16.dp, bottom = 8.dp))
+    }
     Row(Modifier.fillMaxWidth().clickable { dialog = true }.card(), verticalAlignment = Alignment.CenterVertically) {
         Text(soundName(a.sound), Modifier.weight(1f), style = Type.title, color = p.ink)
         Text(stringResource(R.string.change), color = p.dawn)
@@ -282,7 +303,8 @@ private fun SoundSection(a: Alarm, edit: ((Alarm) -> Alarm) -> Unit) {
             title = { Text(stringResource(R.string.sound)) },
             text = {
                 Column {
-                    (Sound.BUILTIN.map(Sound::builtin) + Sound.SYSTEM + Sound.SILENT).forEach { s ->
+                    val options = Sound.BUILTIN.map(Sound::builtin) + Sound.SYSTEM + if (a.radio) emptyList() else listOf(Sound.SILENT)
+                    options.forEach { s ->
                         DialogOption(soundName(s), selected = s == a.sound) {
                             edit { it.copy(sound = s) }
                             dialog = false
@@ -297,6 +319,83 @@ private fun SoundSection(a: Alarm, edit: ((Alarm) -> Alarm) -> Unit) {
             confirmButton = { TextButton(onClick = { dialog = false }) { Text(stringResource(R.string.cancel)) } },
         )
     }
+    if (stations) {
+        StationDialog(a.radioUrl, onDismiss = { stations = false }) { name, url ->
+            edit { it.copy(radioName = name, radioUrl = url) }
+            stations = false
+        }
+    }
+}
+
+@Composable
+private fun StationDialog(current: String, onDismiss: () -> Unit, onPick: (name: String, url: String) -> Unit) {
+    val p = LocalPalette.current
+    val scope = rememberCoroutineScope()
+    var query by remember { mutableStateOf("") }
+    var url by remember { mutableStateOf(current) }
+    var results by remember { mutableStateOf(emptyList<Station>()) }
+    var status by remember { mutableStateOf<Int?>(null) }
+    val customName = stringResource(R.string.radio_custom)
+
+    fun search() {
+        if (query.isBlank()) return
+        results = emptyList()
+        status = R.string.radio_searching
+        scope.launch {
+            runCatching { Stations.search(query) }
+                .onSuccess {
+                    results = it
+                    status = if (it.isEmpty()) R.string.radio_nothing_found else null
+                }
+                .onFailure { status = R.string.radio_search_failed }
+        }
+    }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(R.string.radio_pick)) },
+        text = {
+            Column {
+                OutlinedTextField(
+                    query,
+                    { query = it },
+                    Modifier.fillMaxWidth(),
+                    label = { Text(stringResource(R.string.radio_search)) },
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+                    keyboardActions = KeyboardActions(onSearch = { search() }),
+                    trailingIcon = { TextButton(onClick = ::search) { Text(stringResource(R.string.radio_search_go)) } },
+                )
+                status?.let { Hint(stringResource(it), Modifier.padding(top = 8.dp)) }
+                Column(Modifier.heightIn(max = 280.dp).verticalScroll(rememberScrollState())) {
+                    results.forEach { st ->
+                        Column(
+                            Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp))
+                                .clickable { onPick(st.name, st.url) }.padding(horizontal = 14.dp, vertical = 10.dp),
+                        ) {
+                            Text(st.name, color = if (st.url == current) p.dawn else p.ink, style = Type.title)
+                            val bitrate = if (st.bitrate > 0) stringResource(R.string.radio_bitrate, st.bitrate) else ""
+                            val details = listOf(st.country, st.codec, bitrate)
+                            Hint(details.filter(String::isNotBlank).joinToString(" · "))
+                        }
+                    }
+                }
+                OutlinedTextField(
+                    url,
+                    { url = it },
+                    Modifier.fillMaxWidth().padding(top = 12.dp),
+                    label = { Text(stringResource(R.string.radio_url)) },
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Uri),
+                )
+                val valid = url.trim().let { it.startsWith("http://") || it.startsWith("https://") }
+                TextButton(onClick = { onPick(customName, url.trim()) }, enabled = valid) {
+                    Text(stringResource(R.string.radio_use_url))
+                }
+            }
+        },
+        confirmButton = { TextButton(onClick = onDismiss) { Text(stringResource(R.string.cancel)) } },
+    )
 }
 
 /**

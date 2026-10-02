@@ -47,7 +47,7 @@ interface QrDao {
     suspend fun delete(code: QrCode)
 }
 
-@Database(entities = [Alarm::class, QrCode::class], version = 2)
+@Database(entities = [Alarm::class, QrCode::class], version = 3)
 abstract class RaaDatabase : RoomDatabase() {
     abstract fun alarms(): AlarmDao
     abstract fun qrCodes(): QrDao
@@ -73,5 +73,13 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
         )
         db.execSQL("DROP TABLE alarms")
         db.execSQL("ALTER TABLE alarms_new RENAME TO alarms")
+    }
+}
+
+val MIGRATION_2_3 = object : Migration(2, 3) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("ALTER TABLE alarms ADD COLUMN radio INTEGER NOT NULL DEFAULT 0")
+        db.execSQL("ALTER TABLE alarms ADD COLUMN radioUrl TEXT NOT NULL DEFAULT ''")
+        db.execSQL("ALTER TABLE alarms ADD COLUMN radioName TEXT NOT NULL DEFAULT ''")
     }
 }

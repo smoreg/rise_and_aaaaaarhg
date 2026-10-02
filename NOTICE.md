@@ -19,5 +19,7 @@ License, or (at your option) any later version. It is distributed WITHOUT ANY WA
 ## Libraries
 
 All dependencies are open source: AndroidX (Jetpack Compose, Room, DataStore, CameraX, Navigation,
-AppCompat, Print) and Kotlin coroutines under the Apache License 2.0, ZXing core under the Apache
+AppCompat, Print, Media3 ExoPlayer) and Kotlin coroutines under the Apache License 2.0, ZXing core under the Apache
 License 2.0. No proprietary SDKs, no Google Play services.
+
+Station search uses the open [radio-browser.info](https://www.radio-browser.info) directory.

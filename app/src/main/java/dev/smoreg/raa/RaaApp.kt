@@ -6,8 +6,10 @@ import androidx.room.Room
 import dev.smoreg.raa.alarm.Notifications
 import dev.smoreg.raa.alarm.Scheduler
 import dev.smoreg.raa.data.MIGRATION_1_2
+import dev.smoreg.raa.data.MIGRATION_2_3
 import dev.smoreg.raa.data.RaaDatabase
 import dev.smoreg.raa.data.Settings
+import dev.smoreg.raa.wake.RadioTuner
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 
@@ -33,7 +35,8 @@ class AppContainer(app: Application) {
     private val storage: Context = app.createDeviceProtectedStorageContext()
 
     val scope = CoroutineScope(SupervisorJob())
-    val db = Room.databaseBuilder(storage, RaaDatabase::class.java, "raa.db").addMigrations(MIGRATION_1_2).build()
+    val db = Room.databaseBuilder(storage, RaaDatabase::class.java, "raa.db").addMigrations(MIGRATION_1_2, MIGRATION_2_3).build()
     val settings = Settings(storage)
     val scheduler = Scheduler(app, db.alarms(), settings)
+    val radio by lazy { RadioTuner(app) }
 }

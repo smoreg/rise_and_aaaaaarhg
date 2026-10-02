@@ -164,7 +164,7 @@ class RingingService : LifecycleService() {
 
             val loud = s.phase == Phase.RING && !s.muted()
             if (loud) {
-                if (sound.active) sound.resume() else sound.start(s.alarm.sound, s.alarm.volume, s.alarm.rampSeconds)
+                if (sound.active) sound.resume() else startSound(s)
                 sound.tick()
             } else {
                 sound.pause()
@@ -178,6 +178,12 @@ class RingingService : LifecycleService() {
             delay(TICK_MS)
         }
         stopEverything()
+    }
+
+    /** The stream only counts if it was warmed up for this very alarm; see [RadioService]. */
+    private suspend fun startSound(s: RingSession) {
+        val radio = RaaApp.container.radio.takeIf { s.alarm.usesRadio && it.alarmId == s.alarm.id }
+        sound.start(s.alarm.sound, s.alarm.volume, s.alarm.rampSeconds, radio, if (s.test) TEST_RADIO_WAIT_MS else 0)
     }
 
     private fun torchLevel(s: RingSession, now: Long, loud: Boolean): Float = when {
@@ -250,6 +256,8 @@ class RingingService : LifecycleService() {
         private const val EXTRA_AT = "at"
         private const val EXTRA_SUNRISE = "sunrise"
         private const val TICK_MS = 125L
+        /** A test ring starts the stream cold, so it gets a moment to connect before the melody. */
+        private const val TEST_RADIO_WAIT_MS = 15_000L
         private const val WATCHDOG_REARM_MS = 30_000L
         private const val WAKE_LOCK_MAX_MS = 3 * 60 * 60 * 1000L
 

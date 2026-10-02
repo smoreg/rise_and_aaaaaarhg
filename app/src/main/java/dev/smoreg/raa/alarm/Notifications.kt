@@ -21,11 +21,13 @@ import dev.smoreg.raa.ui.ringing.RingingActivity
 
 object Notifications {
     const val RINGING_ID = 1
+    const val RADIO_CHECK_ID = 3
     private const val CH_RINGING = "ringing"
     /** Same notification while the ringing screen is already in front: must not pop up over it. */
     private const val CH_RINGING_QUIET = "ringing_quiet"
     private const val CH_UPCOMING = "upcoming"
     private const val CH_GAVE_UP = "gave_up"
+    private const val CH_RADIO_CHECK = "radio_check"
 
     fun createChannels(context: Context) {
         val nm = context.getSystemService(NotificationManager::class.java)
@@ -40,6 +42,7 @@ object Notifications {
                     .apply { setSound(null, null); enableVibration(false) },
                 NotificationChannel(CH_UPCOMING, context.getString(R.string.channel_upcoming), NotificationManager.IMPORTANCE_LOW),
                 NotificationChannel(CH_GAVE_UP, context.getString(R.string.channel_gave_up), NotificationManager.IMPORTANCE_DEFAULT),
+                NotificationChannel(CH_RADIO_CHECK, context.getString(R.string.channel_radio_check), NotificationManager.IMPORTANCE_MIN),
             ),
         )
     }
@@ -136,6 +139,16 @@ object Notifications {
             .build()
         post(context, START_FAILED_ID, n)
     }
+
+    /** Required to keep the stream check running; minimal importance, so it stays out of sight. */
+    fun radioCheck(context: Context): android.app.Notification =
+        NotificationCompat.Builder(context, CH_RADIO_CHECK)
+            .setSmallIcon(R.drawable.ic_notification)
+            .setContentTitle(context.getString(R.string.radio_check_notice))
+            .setPriority(NotificationCompat.PRIORITY_MIN)
+            .setSilent(true)
+            .setOngoing(true)
+            .build()
 
     private fun howToStop(mode: DismissMode?) = when (mode) {
         DismissMode.QR -> R.string.notif_stop_qr

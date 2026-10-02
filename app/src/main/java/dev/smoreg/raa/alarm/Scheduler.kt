@@ -9,14 +9,19 @@ import dev.smoreg.raa.MainActivity
 import dev.smoreg.raa.data.Alarm
 import dev.smoreg.raa.data.AlarmDao
 import dev.smoreg.raa.data.Settings
+import dev.smoreg.raa.wake.RadioTuner
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import java.time.ZonedDateTime
 
-enum class Trigger { SUNRISE, RING, UPCOMING, WATCHDOG }
+enum class Trigger { SUNRISE, RING, UPCOMING, WATCHDOG, RADIO_CHECK }
 
 /** The two-hour notice is not time-critical, but an unbounded inexact alarm can be an hour late. */
 private const val NOTICE_WINDOW_MS = 10 * 60_000L
+/** The stream starts muted this long before the ring, to prove it plays before it is needed. */
+private const val RADIO_LEAD_MS = 2 * 60_000L
+/** Less time than this before the ring is not enough to call a stream steady: the melody it is. */
+private const val RADIO_MIN_LEAD_MS = RadioTuner.STEADY_MS + 10_000L
 
 class Scheduler(
     private val context: Context,
@@ -39,6 +44,13 @@ class Scheduler(
         NextTrigger.sunrise(alarm, ring, now)?.let {
             setExact(it.toInstant().toEpochMilli(), AlarmReceiver.pending(context, Trigger.SUNRISE, alarm.id, ringMs))
         }
+        if (alarm.usesRadio) {
+            val nowMs = now.toInstant().toEpochMilli()
+            val checkAt = maxOf(ringMs - RADIO_LEAD_MS, nowMs)
+            if (ringMs - checkAt >= RADIO_MIN_LEAD_MS) {
+                setExact(checkAt, AlarmReceiver.pending(context, Trigger.RADIO_CHECK, alarm.id, ringMs))
+            }
+        }
         val notice = ring.minusHours(2)
         if (settings.current().upcomingNotice && alarm.snoozeUntil == 0L && notice.isAfter(now)) {
             am.setWindow(
@@ -51,7 +63,7 @@ class Scheduler(
     }
 
     fun cancel(alarmId: Long) {
-        for (t in listOf(Trigger.SUNRISE, Trigger.RING, Trigger.UPCOMING)) {
+        for (t in listOf(Trigger.SUNRISE, Trigger.RING, Trigger.UPCOMING, Trigger.RADIO_CHECK)) {
             AlarmReceiver.existing(context, t, alarmId)?.let(am::cancel)
         }
         Notifications.cancelUpcoming(context, alarmId)

@@ -16,6 +16,10 @@ class AlarmReceiver : BroadcastReceiver() {
             Trigger.RING -> RingingService.start(context, id, at, sunrise = false)
             Trigger.SUNRISE -> RingingService.start(context, id, at, sunrise = true)
             Trigger.WATCHDOG -> RingingService.resume(context)
+            Trigger.RADIO_CHECK -> launchAsync {
+                val alarm = RaaApp.container.db.alarms().get(id) ?: return@launchAsync
+                if (alarm.enabled && alarm.usesRadio) RadioService.start(context, id, alarm.radioUrl, at)
+            }
             Trigger.UPCOMING -> launchAsync {
                 val c = RaaApp.container
                 val alarm = c.db.alarms().get(id) ?: return@launchAsync
@@ -31,7 +35,13 @@ class AlarmReceiver : BroadcastReceiver() {
         private fun intent(context: Context, t: Trigger, id: Long) =
             Intent(context, AlarmReceiver::class.java).setAction(t.name).putExtra(EXTRA_ID, id)
 
-        private fun code(t: Trigger, id: Long) = (id * Trigger.entries.size + t.ordinal).toInt()
+        /**
+         * Fixed at the four triggers there were first, so alarms set before an update keep their codes.
+         * A code shared with another alarm's trigger is still a distinct PendingIntent: the action differs.
+         */
+        private const val CODE_STRIDE = 4
+
+        private fun code(t: Trigger, id: Long) = (id * CODE_STRIDE + t.ordinal).toInt()
 
         fun pending(context: Context, t: Trigger, id: Long, at: Long): PendingIntent = PendingIntent.getBroadcast(
             context, code(t, id), intent(context, t, id).putExtra(EXTRA_AT, at),

@@ -38,9 +38,14 @@ data class Alarm(
     val handledUntil: Long = 0,
     val snoozeUntil: Long = 0,
     val snoozeCount: Int = 0,
+    /** Plays [radioUrl] instead of [sound]; [sound] stays the fallback when the stream is not steady. */
+    val radio: Boolean = false,
+    val radioUrl: String = "",
+    val radioName: String = "",
 ) {
     val repeating get() = days != 0
     val canSnooze get() = snoozeMinutes > 0 && snoozeCount < snoozeMax
+    val usesRadio get() = radio && radioUrl.isNotBlank()
 }
 
 /** Bit of [day] in [Alarm.days]. */
